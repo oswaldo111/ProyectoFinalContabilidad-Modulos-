@@ -1,7 +1,10 @@
 package com.sistema;
 
+import com.sistema.ui.FormPrincipal;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Bienvenido al sistema contable");
+        FormPrincipal formPrincipal = new FormPrincipal();
+        formPrincipal.setVisible(true);
     }
 }
