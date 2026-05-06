@@ -1,4 +1,4 @@
-package com.sistema;
+package com.sistema.modulos.contabilidad;
 
 import com.sistema.core.security.SessionManager;
 import com.sistema.modulos.compras.Views.FacturaCompraView;
