@@ -24,7 +24,7 @@ public class LibroComprasService {
         validarSesionActiva();
         validarPeriodo(mes, anio);
 
-        Long idEmpresa = SessionManager.getInstancia().getIdEmpresa();
+        Long idEmpresa = (long) SessionManager.getInstancia().getIdEmpresa();
 
         try {
             return libroComprasDAO.obtenerLibroCompras(idEmpresa, mes, anio);
@@ -41,7 +41,7 @@ public class LibroComprasService {
         validarSesionActiva();
         validarPeriodo(mes, anio);
 
-        Long idEmpresa = SessionManager.getInstancia().getIdEmpresa();
+        Long idEmpresa = (long) SessionManager.getInstancia().getIdEmpresa();
 
         try {
             Map<String, BigDecimal> totales = new HashMap<>();

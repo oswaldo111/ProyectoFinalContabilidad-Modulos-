@@ -6,50 +6,39 @@ package com.sistema.core.security;
  */
 public class SessionManager {
     
-    private static SessionManager instancia;
-    private Long idEmpresa;
-    private String nombreEmpresa;
-    private Long idUsuario;
-    private String nombreUsuario;
+    private static int idEmpresa = 1;
+    private static String nombreEmpresa = "";
+    private static int idUsuario = 1;
+    private static String nombreUsuario = "";
 
     private SessionManager() {}
 
     public static synchronized SessionManager getInstancia() {
-        if (instancia == null) {
-            instancia = new SessionManager();
-        }
-        return instancia;
+        return new SessionManager();
     }
 
-    public void iniciarSesion(Long idEmpresa, String nombreEmpresa, Long idUsuario, String nombreUsuario) {
-        this.idEmpresa = idEmpresa;
-        this.nombreEmpresa = nombreEmpresa;
-        this.idUsuario = idUsuario;
-        this.nombreUsuario = nombreUsuario;
+    public static void iniciarSesion(int idEmpresa, String nombreEmpresa, int idUsuario, String nombreUsuario) {
+        SessionManager.idEmpresa = idEmpresa;
+        SessionManager.nombreEmpresa = nombreEmpresa;
+        SessionManager.idUsuario = idUsuario;
+        SessionManager.nombreUsuario = nombreUsuario;
     }
 
-    public Long getIdEmpresa() {
-        if (idEmpresa == null) {
-            throw new IllegalStateException("❌ No hay empresa seleccionada. Inicie sesión primero.");
-        }
+    public static int getIdEmpresa() {
         return idEmpresa;
     }
 
-    public String getNombreEmpresa() { return nombreEmpresa; }
-    public Long getIdUsuario() { return idUsuario; }
-    public String getNombreUsuario() { return nombreUsuario; }
+    public static String getNombreEmpresa() { return nombreEmpresa; }
+    public static int getIdUsuario() { return idUsuario; }
+    public static String getNombreUsuario() { return nombreUsuario; }
 
-    /**
-     * Verifica si hay una sesión activa
-     */
-    public boolean haySesionActiva() {
-        return idEmpresa != null && idUsuario != null;
+    public static boolean haySesionActiva() {
+        return idEmpresa > 0 && idUsuario > 0;
     }
-
-    public void cerrarSesion() {
-        this.idEmpresa = null;
-        this.nombreEmpresa = null;
-        this.idUsuario = null;
-        this.nombreUsuario = null;
+    public static void cerrarSesion() {
+        idEmpresa = 1;
+        nombreEmpresa = "";
+        idUsuario = 1;
+        nombreUsuario = "";
     }
 }

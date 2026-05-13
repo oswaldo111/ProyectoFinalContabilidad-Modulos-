@@ -19,7 +19,7 @@ public class LibroComprasDAO {
         List<RegistroLibroCompras> lista = new ArrayList<>();
 
         try {
-            conn = DBConnection.obtenerConexion();
+            conn = DBConnection.getConnection();
 
             String sql = """
                 SELECT f.id_factura, f.fecha_emision, f.numero_documento, f.tipo_documento,
@@ -48,7 +48,7 @@ public class LibroComprasDAO {
             return lista;
 
         } finally {
-            DBConnection.cerrar(conn);
+            DBConnection.closeConnection(conn);
         }
     }
 
@@ -79,7 +79,7 @@ public class LibroComprasDAO {
     private BigDecimal obtenerSuma(Long idEmpresa, int mes, int anio, String columna) throws SQLException {
         Connection conn = null;
         try {
-            conn = DBConnection.obtenerConexion();
+            conn = DBConnection.getConnection();
 
             String sql = "SELECT COALESCE(SUM(" + columna + "), 0) AS total "
                        + "FROM facturacion "
@@ -101,7 +101,7 @@ public class LibroComprasDAO {
             return BigDecimal.ZERO;
 
         } finally {
-            DBConnection.cerrar(conn);
+            DBConnection.closeConnection(conn);
         }
     }
 
