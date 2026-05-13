@@ -12,10 +12,6 @@ import com.sistema.modulos.compras.Views.PanelCompras;
 import com.sistema.modulos.compras.Views.PanelProveedores;
 import com.sistema.modulos.compras.Views.PanelReporteCompras;
 import com.sistema.core.security.SessionManager;
-import com.sistema.modulos.bancos.Controllers.BancosController;
-import com.sistema.modulos.bancos.Views.ConciliacionView;
-import com.sistema.modulos.bancos.Views.CuentasBancariasView;
-import com.sistema.modulos.bancos.Views.MovimientosView;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -46,7 +42,6 @@ public class FormPrincipal extends javax.swing.JFrame {
     
     // Referencias para comunicación entre módulos (opcional)
     private FiscalController fiscalController;
-    private BancosController bancosController;
     private PanelCompras panelCompras;
     private PanelProveedores panelProveedores;
 
@@ -87,7 +82,6 @@ public class FormPrincipal extends javax.swing.JFrame {
         tabsModulos.setFont(new Font("Segoe UI", Font.BOLD, 13));
         tabsModulos.addTab("Módulo Fiscal (IVA)", crearPanelFiscal());
         tabsModulos.addTab("Módulo de Compras", crearPanelComprasUnificado());
-        tabsModulos.addTab("Módulo de Bancos", crearPanelBancos());
         
         // 3. Status bar inferior
         JPanel statusBar = crearStatusBar();
@@ -163,25 +157,6 @@ public class FormPrincipal extends javax.swing.JFrame {
         tabsFiscal.addTab("Liquidación IVA", liquidacionView);
 
         return tabsFiscal;
-    }
-
-    private JTabbedPane crearPanelBancos() {
-        CuentasBancariasView cuentasView = new CuentasBancariasView();
-        MovimientosView movimientosView = new MovimientosView();
-        ConciliacionView conciliacionView = new ConciliacionView();
-
-        bancosController = new BancosController(cuentasView, movimientosView, conciliacionView);
-        cuentasView.setController(bancosController);
-        movimientosView.setController(bancosController);
-        conciliacionView.setController(bancosController);
-
-        JTabbedPane tabsBancos = new JTabbedPane();
-        tabsBancos.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        tabsBancos.addTab("Cuentas Bancarias", cuentasView);
-        tabsBancos.addTab("Movimientos", movimientosView);
-        tabsBancos.addTab("Conciliación", conciliacionView);
-
-        return tabsBancos;
     }
 
     private JPanel crearPanelComprasUnificado() {
