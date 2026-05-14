@@ -7,6 +7,7 @@ import com.sistema.modulos.compras.Models.DetalleCompra;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
+
 import java.awt.*;
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -15,7 +16,9 @@ import java.util.List;
 
 public class PanelCompras extends JPanel {
     
+    // CAMPO DEL CONTROLADOR (ya lo tenías, perfecto)
     private CompraController controller;
+    
     private JTable tablaCompras;
     private DefaultTableModel modeloTabla;
     private JComboBox<String> comboFiltroEstado;
@@ -26,9 +29,25 @@ public class PanelCompras extends JPanel {
     private JLabel lblTotalPendiente;
     
     public PanelCompras() {
-        this.controller = new CompraController();
+        // ELIMINAMOS: this.controller = new CompraController();
+        // Ahora el controller se inyectará desde fuera vía setController()
         initComponents();
+        
+        // FALLBACK OPCIONAL: Para pruebas independientes sin MainSimple
+        if (this.controller == null) {
+            this.controller = new CompraController();
+        }
         cargarCompras();
+    }
+    
+    // MÉTODO NUEVO: Setter para inyección de dependencias
+    public void setController(CompraController controller) {
+        this.controller = controller;
+    }
+    
+    // Getter opcional (útil para testing)
+    public CompraController getController() {
+        return controller;
     }
     
     private void initComponents() {
@@ -64,11 +83,11 @@ public class PanelCompras extends JPanel {
         });
         panelFiltros.add(chkProximasVencer);
         
-        btnBuscar = new JButton("🔍 Buscar");
+        btnBuscar = new JButton("Buscar");
         btnBuscar.addActionListener(e -> buscarCompras());
         panelFiltros.add(btnBuscar);
         
-        JButton btnLimpiar = new JButton("🗑️ Limpiar");
+        JButton btnLimpiar = new JButton("Limpiar");
         btnLimpiar.addActionListener(e -> limpiarFiltros());
         panelFiltros.add(btnLimpiar);
         
@@ -84,11 +103,11 @@ public class PanelCompras extends JPanel {
         panelSuperior.add(panelResumen, BorderLayout.EAST);
         
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 5));
-        btnRegistrarCompra = new JButton("➕ Nueva Compra");
+        btnRegistrarCompra = new JButton("Nueva Compra");
         btnRegistrarCompra.addActionListener(e -> abrirDialogRegistroCompra());
-        btnVerDetalle = new JButton("📋 Ver Detalle");
+        btnVerDetalle = new JButton("Ver Detalle");
         btnVerDetalle.addActionListener(e -> verDetalleCompra());
-        btnPagar = new JButton("💰 Pagar Factura");
+        btnPagar = new JButton("Pagar Factura");
         btnPagar.addActionListener(e -> abrirDialogPago());
         
         panelBotones.add(btnRegistrarCompra);
@@ -133,12 +152,16 @@ public class PanelCompras extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
     }
     
+    // ==================== MÉTODOS CON VALIDACIÓN DE CONTROLLER ====================
+    
     private void cargarCompras() {
+        if (controller == null) return;
         List<Compra> compras = controller.obtenerTodasCompras();
         actualizarTabla(compras);
     }
     
     private void buscarCompras() {
+        if (controller == null) return;
         String proveedor = txtFiltroProveedor.getText().trim();
         String estado = comboFiltroEstado.getSelectedItem().toString();
         estado = estado.equals("TODOS") ? null : estado;
@@ -162,6 +185,8 @@ public class PanelCompras extends JPanel {
     }
     
     private void actualizarTabla(List<Compra> compras) {
+        if (compras == null) return;
+        
         modeloTabla.setRowCount(0);
         LocalDate hoy = LocalDate.now();
         
@@ -184,11 +209,17 @@ public class PanelCompras extends JPanel {
             });
         }
         
-        BigDecimal totalPendiente = controller.calcularTotalPendiente(compras);
-        lblTotalPendiente.setText("$" + totalPendiente.toString());
+        if (controller != null) {
+            BigDecimal totalPendiente = controller.calcularTotalPendiente(compras);
+            lblTotalPendiente.setText("$" + totalPendiente.toString());
+        }
     }
     
     private void abrirDialogRegistroCompra() {
+        if (controller == null) {
+            JOptionPane.showMessageDialog(this, "Controller no inicializado", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         DialogRegistrarCompra dialog = new DialogRegistrarCompra(
             SwingUtilities.getWindowAncestor(this), controller);
         dialog.setVisible(true);
@@ -198,6 +229,8 @@ public class PanelCompras extends JPanel {
     }
     
     private void verDetalleCompra() {
+        if (controller == null) return;
+        
         int fila = tablaCompras.getSelectedRow();
         if (fila == -1) {
             JOptionPane.showMessageDialog(this, "Seleccione una compra", "Advertencia", JOptionPane.WARNING_MESSAGE);
@@ -212,6 +245,11 @@ public class PanelCompras extends JPanel {
     }
     
     private void abrirDialogPago() {
+        if (controller == null) {
+            JOptionPane.showMessageDialog(this, "Controller no inicializado", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
         int fila = tablaCompras.getSelectedRow();
         if (fila == -1) {
             JOptionPane.showMessageDialog(this, "Seleccione una factura para pagar", "Advertencia", JOptionPane.WARNING_MESSAGE);
@@ -253,6 +291,8 @@ public class PanelCompras extends JPanel {
             }
         }
     }
+    
+    // ==================== RENDERERS (sin cambios) ====================
     
     class FormatoMonedaRenderer extends DefaultTableCellRenderer {
         @Override

@@ -1,5 +1,8 @@
 package com.sistema.modulos.compras;
 
+import com.sistema.modulos.compras.Controllers.CompraController;
+import com.sistema.modulos.compras.Controllers.ProveedorController;
+import com.sistema.modulos.compras.Controllers.ReporteController;
 import com.sistema.modulos.compras.Views.PanelCompras;
 import com.sistema.modulos.compras.Views.PanelProveedores;
 import com.sistema.modulos.compras.Views.PanelReporteCompras;
@@ -7,42 +10,61 @@ import com.sistema.modulos.compras.Views.PanelReporteCompras;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Formulario principal del módulo de Compras.
+ * Implementa JTabbedPane con inyección de controllers individuales.
+ */
 public class MainSimple extends JFrame {
 
     public MainSimple() {
+        // Configurar la ventana
         setTitle("Módulo de Compras - Grupo 1");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        setResizable(false);
+        setResizable(true);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setLocationRelativeTo(null);
 
-        CardLayout cardLayout = new CardLayout();
-        JPanel panelPrincipal = new JPanel(cardLayout);
+        // 1. Crear las vistas
+        PanelProveedores proveedoresView = new PanelProveedores();
+        PanelCompras comprasView = new PanelCompras();
+        PanelReporteCompras reporteView = new PanelReporteCompras();
 
-        PanelProveedores panelProveedores = new PanelProveedores();
-        PanelCompras panelCompras = new PanelCompras();
-        PanelReporteCompras panelReporte = new PanelReporteCompras();
+        // 2. Crear controllers individuales (uno por vista)
+        ProveedorController proveedorCtrl = new ProveedorController();
+        CompraController compraCtrl = new CompraController();
+        ReporteController reporteCtrl = new ReporteController();
 
-        panelPrincipal.add(panelProveedores, "PROVEEDORES");
-        panelPrincipal.add(panelCompras, "COMPRAS");
-        panelPrincipal.add(panelReporte, "REPORTE");
+        // 3. Inyectar cada controller en su vista correspondiente
+        proveedoresView.setController(proveedorCtrl);
+        comprasView.setController(compraCtrl);
+        reporteView.setController(reporteCtrl);
 
-        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 8));
-        panelBotones.setBackground(new Color(60, 63, 65));
+        // 4. Crear JTabbedPane con las vistas configuradas
+        JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        tabbedPane.setBackground(new Color(245, 245, 245));
 
-        JButton btnProveedores = crearBoton("Proveedores", new Color(52, 152, 219));
-        JButton btnCompras = crearBoton("Compras", new Color(46, 204, 113));
-        JButton btnReporte = crearBoton("Libro de Compras IVA", new Color(241, 196, 15));
+        tabbedPane.addTab("Proveedores", proveedoresView);
+        tabbedPane.addTab("Compras", comprasView);
+        tabbedPane.addTab("Libro de Compras IVA", reporteView);
 
-        btnProveedores.addActionListener(e -> cardLayout.show(panelPrincipal, "PROVEEDORES"));
-        btnCompras.addActionListener(e -> cardLayout.show(panelPrincipal, "COMPRAS"));
-        btnReporte.addActionListener(e -> cardLayout.show(panelPrincipal, "REPORTE"));
+        // 5. Panel de información superior
+        JPanel panelInfo = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 5));
+        panelInfo.setBackground(new Color(63, 81, 181));
+        panelInfo.setPreferredSize(new Dimension(0, 35));
 
-        panelBotones.add(btnProveedores);
-        panelBotones.add(btnCompras);
-        panelBotones.add(btnReporte);
+        JLabel lblTitulo = new JLabel("MÓDULO DE COMPRAS — Grupo 1");
+        lblTitulo.setForeground(Color.WHITE);
+        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        panelInfo.add(lblTitulo);
 
+        JLabel lblEmpresa = new JLabel("| Empresa ID: " +
+                com.sistema.core.security.SessionManager.getIdEmpresa());
+        lblEmpresa.setForeground(new Color(200, 200, 255));
+        lblEmpresa.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        panelInfo.add(lblEmpresa);
+
+        // 6. Barra de estado inferior
         JPanel statusBar = new JPanel(new BorderLayout());
         statusBar.setBorder(BorderFactory.createEmptyBorder(3, 8, 3, 8));
         statusBar.setBackground(new Color(52, 73, 94));
@@ -52,29 +74,33 @@ public class MainSimple extends JFrame {
         lblStatus.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         statusBar.add(lblStatus, BorderLayout.WEST);
 
-        add(panelBotones, BorderLayout.NORTH);
-        add(panelPrincipal, BorderLayout.CENTER);
-        add(statusBar, BorderLayout.SOUTH);
-    }
-
-    private JButton crearBoton(String texto, Color color) {
-        JButton boton = new JButton(texto);
-        boton.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        boton.setBackground(color);
-        boton.setForeground(Color.BLACK);
-        boton.setFocusPainted(false);
-        boton.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));
-        boton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        return boton;
+        // 7. Ensamblar componentes
+        getContentPane().setLayout(new BorderLayout());
+        getContentPane().add(panelInfo, BorderLayout.NORTH);
+        getContentPane().add(tabbedPane, BorderLayout.CENTER);
+        getContentPane().add(statusBar, BorderLayout.SOUTH);
     }
 
     public static void main(String[] args) {
+        // Aplicar Look and Feel Nimbus
         try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
         } catch (Exception e) {
-            e.printStackTrace();
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
 
-        SwingUtilities.invokeLater(() -> new MainSimple().setVisible(true));
+        SwingUtilities.invokeLater(() -> {
+            MainSimple frame = new MainSimple();
+            frame.setVisible(true);
+        });
     }
 }

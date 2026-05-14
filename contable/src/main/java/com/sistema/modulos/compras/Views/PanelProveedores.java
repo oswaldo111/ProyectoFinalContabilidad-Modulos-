@@ -5,12 +5,16 @@ import com.sistema.modulos.compras.Models.Proveedor;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
 import java.awt.*;
 import java.util.List;
 
 public class PanelProveedores extends JPanel {
     
+    // CAMPO DEL CONTROLADOR (ya lo tenías, perfecto)
     private ProveedorController controller;
+    
     private JTable tablaProveedores;
     private DefaultTableModel modeloTabla;
     private JTextField txtNombre, txtNRC, txtNIT, txtDUI, txtTelefono, txtDireccion, txtBuscar;
@@ -18,30 +22,45 @@ public class PanelProveedores extends JPanel {
     private int idSeleccionado = -1;
     
     public PanelProveedores() {
-        this.controller = new ProveedorController();
+        // ELIMINAMOS: this.controller = new ProveedorController();
+        // Ahora el controller se inyectará desde fuera vía setController()
         initComponents();
+        // OPCIONAL: Si quieres un fallback para pruebas independientes:
+        if (this.controller == null) {
+            this.controller = new ProveedorController();
+        }
         cargarProveedores();
+    }
+    
+    // MÉTODO NUEVO: Setter para inyección de dependencias
+    public void setController(ProveedorController controller) {
+        this.controller = controller;
+    }
+    
+    // Getter opcional (útil para testing)
+    public ProveedorController getController() {
+        return controller;
     }
     
     private void initComponents() {
         setLayout(new BorderLayout(8, 8));
         setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
         
-        // Panel de búsqueda (más compacto)
+        // Panel de búsqueda
         JPanel panelBusqueda = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 4));
         panelBusqueda.setBorder(BorderFactory.createTitledBorder("Buscar Proveedor"));
         panelBusqueda.add(new JLabel("Buscar:"));
         txtBuscar = new JTextField(15);
         panelBusqueda.add(txtBuscar);
-        btnBuscar = new JButton("🔍 Buscar");
+        btnBuscar = new JButton("Buscar");
         btnBuscar.addActionListener(e -> buscarProveedores());
         panelBusqueda.add(btnBuscar);
         
-        JButton btnRefrescar = new JButton("🔄 Refrescar");
+        JButton btnRefrescar = new JButton("Refrescar");
         btnRefrescar.addActionListener(e -> cargarProveedores());
         panelBusqueda.add(btnRefrescar);
         
-        // Panel de formulario (más compacto)
+        // Panel de formulario
         JPanel panelFormulario = new JPanel(new GridBagLayout());
         panelFormulario.setBorder(BorderFactory.createTitledBorder("Registro de Proveedores"));
         GridBagConstraints gbc = new GridBagConstraints();
@@ -83,11 +102,12 @@ public class PanelProveedores extends JPanel {
         panelFormulario.add(txtDireccion, gbc);
         
         JPanel panelBotonesForm = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 5));
-        btnGuardar = new JButton("💾 Guardar");
-        btnEditar = new JButton("✏️ Editar");
-        btnEliminar = new JButton("🗑️ Eliminar");
-        btnLimpiar = new JButton("🧹 Limpiar");
+        btnGuardar = new JButton("Guardar");
+        btnEditar = new JButton("Editar");
+        btnEliminar = new JButton("Eliminar");
+        btnLimpiar = new JButton("Limpiar");
         
+        // Los listeners ya llaman a métodos del controller, ¡perfecto!
         btnGuardar.addActionListener(e -> guardarProveedor());
         btnEditar.addActionListener(e -> editarProveedor());
         btnEliminar.addActionListener(e -> eliminarProveedor());
@@ -98,7 +118,7 @@ public class PanelProveedores extends JPanel {
         panelBotonesForm.add(btnEliminar);
         panelBotonesForm.add(btnLimpiar);
         
-        // Tabla (más compacta)
+        // Tabla
         String[] columnas = {"ID", "Nombre", "NRC", "NIT", "DUI", "Teléfono", "Dirección"};
         modeloTabla = new DefaultTableModel(columnas, 0) {
             @Override
@@ -124,16 +144,17 @@ public class PanelProveedores extends JPanel {
         add(scrollTabla, BorderLayout.CENTER);
     }
     
-    // Resto de métodos iguales (cargarProveedores, buscarProveedores, etc.)
-    // ... (mantén el mismo código de los métodos existentes)
+    // ==================== MÉTODOS EXISTENTES (sin cambios) ====================
     
     private void cargarProveedores() {
+        if (controller == null) return;
         List<Proveedor> proveedores = controller.obtenerTodos();
         actualizarTabla(proveedores);
         txtBuscar.setText("");
     }
     
     private void buscarProveedores() {
+        if (controller == null) return;
         String filtro = txtBuscar.getText().trim();
         List<Proveedor> proveedores = controller.buscar(filtro);
         actualizarTabla(proveedores);
@@ -167,6 +188,10 @@ public class PanelProveedores extends JPanel {
     }
     
     private void guardarProveedor() {
+        if (controller == null) {
+            JOptionPane.showMessageDialog(this, "Controller no inicializado", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         if (txtNombre.getText().trim().isEmpty() || txtNIT.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Nombre y NIT son obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -187,6 +212,7 @@ public class PanelProveedores extends JPanel {
     }
     
     private void editarProveedor() {
+        if (controller == null) return;
         if (idSeleccionado == -1) {
             JOptionPane.showMessageDialog(this, "Seleccione un proveedor", "Advertencia", JOptionPane.WARNING_MESSAGE);
             return;
@@ -208,6 +234,7 @@ public class PanelProveedores extends JPanel {
     }
     
     private void eliminarProveedor() {
+        if (controller == null) return;
         if (idSeleccionado == -1) {
             JOptionPane.showMessageDialog(this, "Seleccione un proveedor", "Advertencia", JOptionPane.WARNING_MESSAGE);
             return;

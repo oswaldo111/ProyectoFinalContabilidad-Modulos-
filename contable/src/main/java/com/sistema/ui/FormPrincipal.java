@@ -8,10 +8,15 @@ import com.sistema.modulos.fiscal.Controllers.FiscalController;
 import com.sistema.modulos.fiscal.Views.LibroComprasView;
 import com.sistema.modulos.fiscal.Views.LibroVentasView;
 import com.sistema.modulos.fiscal.Views.LiquidacionView;
+
+import com.sistema.modulos.compras.Controllers.CompraController;
+import com.sistema.modulos.compras.Controllers.ProveedorController;
+import com.sistema.modulos.compras.Controllers.ReporteController;
 import com.sistema.modulos.compras.Views.PanelCompras;
 import com.sistema.modulos.compras.Views.PanelProveedores;
 import com.sistema.modulos.compras.Views.PanelReporteCompras;
 import com.sistema.core.security.SessionManager;
+
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -19,7 +24,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FlowLayout;
 import java.awt.BorderLayout;
-import java.awt.GridBagLayout;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -31,7 +35,7 @@ import javax.swing.UIManager;
 
 /**
  * FORMULARIO PRINCIPAL UNIFICADO - GT6/GT1
- * Integra Módulos: Fiscal (IVA) y Compras
+ * Integra Módulos: Fiscal (IVA) y Compras con patrón MVC y JTabbedPane
  * Compatible con com.sistema.core.security.SessionManager
  * 
  * @author R5 8500G
@@ -42,8 +46,9 @@ public class FormPrincipal extends javax.swing.JFrame {
     
     // Referencias para comunicación entre módulos (opcional)
     private FiscalController fiscalController;
-    private PanelCompras panelCompras;
-    private PanelProveedores panelProveedores;
+    private ProveedorController proveedorController;
+    private CompraController compraController;
+    private ReporteController reporteController;
 
     /**
      * Creates new form FormPrincipal
@@ -70,18 +75,21 @@ public class FormPrincipal extends javax.swing.JFrame {
     }
 
     private void crearInterfazUnificada() {
-        // Panel principal con BorderLayout para organizar header, tabs y status
         JPanel panelRaiz = new JPanel(new BorderLayout());
         panelRaiz.setBackground(Color.WHITE);
         
         // 1. Header superior
         JPanel header = crearHeader();
         
-        // 2. Pestañas de módulos (solo los que existen)
+        // 2. Pestañas principales de módulos
         JTabbedPane tabsModulos = new JTabbedPane(JTabbedPane.TOP);
-        tabsModulos.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        tabsModulos.addTab("Módulo Fiscal (IVA)", crearPanelFiscal());
-        tabsModulos.addTab("Módulo de Compras", crearPanelComprasUnificado());
+        tabsModulos.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        
+        // Módulo Fiscal (IVA) - ya con MVC y JTabbedPane interno
+        tabsModulos.addTab("Fiscal (IVA)", crearPanelFiscal());
+        
+        // Módulo de Compras - ahora con JTabbedPane interno (sin CardLayout)
+        tabsModulos.addTab("Compras", crearPanelComprasConTabs());
         
         // 3. Status bar inferior
         JPanel statusBar = crearStatusBar();
@@ -91,7 +99,6 @@ public class FormPrincipal extends javax.swing.JFrame {
         panelRaiz.add(tabsModulos, BorderLayout.CENTER);
         panelRaiz.add(statusBar, BorderLayout.SOUTH);
         
-        // Reemplazar el contenido del JFrame con nuestro panel unificado
         setContentPane(panelRaiz);
         revalidate();
         repaint();
@@ -140,6 +147,8 @@ public class FormPrincipal extends javax.swing.JFrame {
         return panel;
     }
 
+    // ==================== MÓDULO FISCAL (Sin cambios - ya está bien) ====================
+    
     private JTabbedPane crearPanelFiscal() {
         LibroVentasView ventasView = new LibroVentasView();
         LibroComprasView comprasView = new LibroComprasView();
@@ -154,43 +163,43 @@ public class FormPrincipal extends javax.swing.JFrame {
         tabsFiscal.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         tabsFiscal.addTab("Libro de Ventas", ventasView);
         tabsFiscal.addTab("Libro de Compras", comprasView);
-        tabsFiscal.addTab("Liquidación IVA", liquidacionView);
+        tabsFiscal.addTab("Liquidacion IVA", liquidacionView);
 
         return tabsFiscal;
     }
 
-    private JPanel crearPanelComprasUnificado() {
-        JPanel panelPrincipal = new JPanel(new CardLayout());
+    // ==================== MÓDULO COMPRAS (MODIFICADO: JTabbedPane + MVC) ====================
+    
+    private JTabbedPane crearPanelComprasConTabs() {
+        // 1. Crear las vistas del módulo Compras
+        PanelProveedores proveedoresView = new PanelProveedores();
+        PanelCompras comprasView = new PanelCompras();
+        PanelReporteCompras reporteView = new PanelReporteCompras();
 
-        panelProveedores = new PanelProveedores();
-        panelCompras = new PanelCompras();
-        PanelReporteCompras panelReporte = new PanelReporteCompras();
+        // 2. Crear controllers individuales para cada vista
+        proveedorController = new ProveedorController();
+        compraController = new CompraController();
+        reporteController = new ReporteController();
 
-        panelPrincipal.add(panelProveedores, "PROVEEDORES");
-        panelPrincipal.add(panelCompras, "COMPRAS");
-        panelPrincipal.add(panelReporte, "REPORTE");
+        // 3. Inyectar controllers en las vistas (patrón MVC)
+        proveedoresView.setController(proveedorController);
+        comprasView.setController(compraController);
+        reporteView.setController(reporteController);
 
-        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 8));
-        panelBotones.setBackground(new Color(236, 240, 241));
-        panelBotones.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+        // 4. Crear JTabbedPane interno para el módulo Compras
+        JTabbedPane tabsCompras = new JTabbedPane();
+        tabsCompras.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        tabsCompras.setBackground(new Color(245, 245, 245));
+        
+        // 5. Agregar vistas como pestañas con iconos Unicode
+        tabsCompras.addTab("Proveedores", proveedoresView);
+        tabsCompras.addTab("Registro de Compras", comprasView);
+        tabsCompras.addTab("Libro Compras IVA", reporteView);
 
-        JButton btnProv = crearBotonNavegacion("Proveedores", new Color(52, 152, 219));
-        JButton btnComp = crearBotonNavegacion("Compras", new Color(46, 204, 113));
-        JButton btnRep = crearBotonNavegacion("Libro Compras IVA", new Color(241, 196, 15));
-
-        btnProv.addActionListener(e -> ((CardLayout)panelPrincipal.getLayout()).show(panelPrincipal, "PROVEEDORES"));
-        btnComp.addActionListener(e -> ((CardLayout)panelPrincipal.getLayout()).show(panelPrincipal, "COMPRAS"));
-        btnRep.addActionListener(e -> ((CardLayout)panelPrincipal.getLayout()).show(panelPrincipal, "REPORTE"));
-
-        panelBotones.add(btnProv);
-        panelBotones.add(btnComp);
-        panelBotones.add(btnRep);
-
-        JPanel contenedor = new JPanel(new BorderLayout());
-        contenedor.add(panelBotones, BorderLayout.NORTH);
-        contenedor.add(panelPrincipal, BorderLayout.CENTER);
-        return contenedor;
+        return tabsCompras;
     }
+
+    // ==================== COMPONENTES COMUNES ====================
 
     private JPanel crearStatusBar() {
         JPanel bar = new JPanel(new BorderLayout());
@@ -199,7 +208,7 @@ public class FormPrincipal extends javax.swing.JFrame {
         
         String usuario = SessionManager.getNombreUsuario();
         String displayUser = (usuario != null && !usuario.trim().isEmpty()) ? usuario : "Invitado";
-        String estado = SessionManager.haySesionActiva() ? "Conectado" : "Sesion no iniciada";
+        String estado = SessionManager.haySesionActiva() ? "Conectado" : "Sesión no iniciada";
             
         JLabel lblEstado = new JLabel(estado + " | Usuario: " + displayUser);
         lblEstado.setForeground(new Color(236, 240, 241));
@@ -228,10 +237,11 @@ public class FormPrincipal extends javax.swing.JFrame {
 
     private void mostrarAyuda() {
         JOptionPane.showMessageDialog(this,
-            "Ayuda:\n• Pestañas superiores = cambiar módulo\n" +
-            "• Botones en Compras = navegar entre paneles\n" +
-            "• La sesión se comparte automáticamente vía SessionManager",
-            "Ayuda", JOptionPane.INFORMATION_MESSAGE);
+            "Ayuda:\n• Pestañas superiores = cambiar entre módulos principales\n" +
+            "• Dentro de cada módulo = pestañas internas para cada funcionalidad\n" +
+            "• La sesión se comparte automáticamente vía SessionManager\n" +
+            "• Todos los módulos siguen el patrón MVC para mejor mantenimiento",
+            "Ayuda del Sistema", JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**
@@ -241,7 +251,7 @@ public class FormPrincipal extends javax.swing.JFrame {
     public static void abrirDesdeLogin() {
         java.awt.EventQueue.invokeLater(() -> {
             try {
-                // Aplicar Look and Feel antes de crear la ventana
+                // Aplicar Look and Feel Nimbus
                 for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                     if ("Nimbus".equals(info.getName())) {
                         javax.swing.UIManager.setLookAndFeel(info.getClassName());

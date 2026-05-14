@@ -16,7 +16,9 @@ import java.util.List;
 
 public class PanelReporteCompras extends JPanel {
     
+    // CAMPO DEL CONTROLADOR (ya lo tenías, perfecto)
     private ReporteController controller;
+    
     private JTable tablaReporte;
     private DefaultTableModel modeloTabla;
     private JTextField txtFechaInicio, txtFechaFin;
@@ -24,8 +26,24 @@ public class PanelReporteCompras extends JPanel {
     private JLabel lblTotalGravado, lblTotalIVA, lblTotalGeneral;
     
     public PanelReporteCompras() {
-        this.controller = new ReporteController();
+        // ELIMINAMOS: this.controller = new ReporteController();
+        // Ahora el controller se inyectará desde fuera vía setController()
         initComponents();
+        
+        // FALLBACK OPCIONAL: Para pruebas independientes sin MainSimple
+        if (this.controller == null) {
+            this.controller = new ReporteController();
+        }
+    }
+    
+    // MÉTODO NUEVO: Setter para inyección de dependencias
+    public void setController(ReporteController controller) {
+        this.controller = controller;
+    }
+    
+    // Getter opcional (útil para testing)
+    public ReporteController getController() {
+        return controller;
     }
     
     private void initComponents() {
@@ -48,17 +66,17 @@ public class PanelReporteCompras extends JPanel {
         btnGenerar.addActionListener(e -> generarReporte());
         panelFiltros.add(btnGenerar);
         
-        // Panel de botones de exportación (nuevo)
+        // Panel de botones de exportación
         JPanel panelExportar = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 4));
         panelExportar.setBorder(BorderFactory.createTitledBorder("Exportar"));
         
         btnExportarExcel = new JButton("Exportar a Excel");
         btnExportarExcel.addActionListener(e -> exportarExcel());
-        btnExportarExcel.setEnabled(false); // Se habilita cuando hay datos
+        btnExportarExcel.setEnabled(false);
         
-        btnExportarPDF = new JButton("📄 Exportar a PDF");
+        btnExportarPDF = new JButton("Exportar a PDF");
         btnExportarPDF.addActionListener(e -> exportarPDF());
-        btnExportarPDF.setEnabled(false); // Se habilita cuando hay datos
+        btnExportarPDF.setEnabled(false);
         
         panelExportar.add(btnExportarExcel);
         panelExportar.add(btnExportarPDF);
@@ -81,7 +99,7 @@ public class PanelReporteCompras extends JPanel {
             tablaReporte.getColumnModel().getColumn(i).setCellRenderer(new FormatoMonedaRenderer());
         }
         
-        // Ajustar anchos
+        // Ajustar anchos de columnas
         tablaReporte.getColumnModel().getColumn(0).setPreferredWidth(50);
         tablaReporte.getColumnModel().getColumn(1).setPreferredWidth(70);
         tablaReporte.getColumnModel().getColumn(2).setPreferredWidth(70);
@@ -121,7 +139,18 @@ public class PanelReporteCompras extends JPanel {
         add(panelTotales, BorderLayout.SOUTH);
     }
     
+    // ==================== MÉTODOS CON VALIDACIÓN DE CONTROLLER ====================
+    
     private void generarReporte() {
+        // Validación crítica: verificar que el controller esté inyectado
+        if (controller == null) {
+            JOptionPane.showMessageDialog(this, 
+                "Controller no inicializado. Contacte al administrador.", 
+                "Error de configuración", 
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
         try {
             Date fechaInicio = Date.valueOf(txtFechaInicio.getText().trim());
             Date fechaFin = Date.valueOf(txtFechaFin.getText().trim());
@@ -147,6 +176,7 @@ public class PanelReporteCompras extends JPanel {
                 });
             }
             
+            // Usar controller para cálculos de totales
             lblTotalGravado.setText("$" + controller.sumarMontoGravado(reportes).toString());
             lblTotalIVA.setText("$" + controller.sumarMontoIVA(reportes).toString());
             lblTotalGeneral.setText("$" + controller.sumarMontoTotal(reportes).toString());
@@ -157,14 +187,22 @@ public class PanelReporteCompras extends JPanel {
             btnExportarPDF.setEnabled(hayDatos);
             
             if (!hayDatos) {
-                JOptionPane.showMessageDialog(this, "No hay compras en el período seleccionado", "Información", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, 
+                    "No hay compras en el período seleccionado", 
+                    "Información", 
+                    JOptionPane.INFORMATION_MESSAGE);
             }
         } catch (IllegalArgumentException e) {
-            JOptionPane.showMessageDialog(this, "Formato de fecha inválido. Use YYYY-MM-DD", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, 
+                "Formato de fecha inválido. Use YYYY-MM-DD", 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
         }
     }
     
     private void exportarExcel() {
+        if (controller == null) return;
+        
         if (modeloTabla.getRowCount() == 0) {
             JOptionPane.showMessageDialog(this, "No hay datos para exportar", "Advertencia", JOptionPane.WARNING_MESSAGE);
             return;
@@ -175,6 +213,8 @@ public class PanelReporteCompras extends JPanel {
     }
     
     private void exportarPDF() {
+        if (controller == null) return;
+        
         if (modeloTabla.getRowCount() == 0) {
             JOptionPane.showMessageDialog(this, "No hay datos para exportar", "Advertencia", JOptionPane.WARNING_MESSAGE);
             return;
@@ -184,6 +224,7 @@ public class PanelReporteCompras extends JPanel {
         ExportadorPDF.exportar(tablaReporte, titulo, titulo);
     }
     
+    // Renderer de moneda (sin cambios)
     class FormatoMonedaRenderer extends DefaultTableCellRenderer {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {

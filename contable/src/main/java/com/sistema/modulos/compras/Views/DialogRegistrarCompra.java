@@ -110,7 +110,7 @@ public class DialogRegistrarCompra extends JDialog {
         panelProductos.add(txtPrecioUnitario, gbcProd);
         
         gbcProd.gridx = 6;
-        btnAgregar = new JButton("➕ Agregar");
+        btnAgregar = new JButton("Agregar");
         btnAgregar.addActionListener(e -> agregarProducto());
         panelProductos.add(btnAgregar, gbcProd);
         
@@ -141,11 +141,11 @@ public class DialogRegistrarCompra extends JDialog {
         panelTotales.add(lblTotal);
         
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        btnEliminar = new JButton("🗑️ Eliminar");
+        btnEliminar = new JButton("Eliminar");
         btnEliminar.addActionListener(e -> eliminarProducto());
-        btnGuardar = new JButton("💾 Guardar Compra");
+        btnGuardar = new JButton("Guardar Compra");
         btnGuardar.addActionListener(e -> guardarCompra());
-        JButton btnCancelar = new JButton("❌ Cancelar");
+        JButton btnCancelar = new JButton("Cancelar");
         btnCancelar.addActionListener(e -> dispose());
         
         panelBotones.add(btnEliminar);
