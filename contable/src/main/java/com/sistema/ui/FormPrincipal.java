@@ -15,6 +15,7 @@ import com.sistema.modulos.compras.Controllers.ReporteController;
 import com.sistema.modulos.compras.Views.PanelCompras;
 import com.sistema.modulos.compras.Views.PanelProveedores;
 import com.sistema.modulos.compras.Views.PanelReporteCompras;
+import com.sistema.modulos.contabilidad.Views.CatalogoCuentas;
 import com.sistema.core.security.SessionManager;
 
 import java.awt.CardLayout;
@@ -90,6 +91,8 @@ public class FormPrincipal extends javax.swing.JFrame {
         
         // Módulo de Compras - ahora con JTabbedPane interno (sin CardLayout)
         tabsModulos.addTab("Compras", crearPanelComprasConTabs());
+
+        tabsModulos.addTab("Contabilidad", crearPnaleContabilidad());
         
         // 3. Status bar inferior
         JPanel statusBar = crearStatusBar();
@@ -147,6 +150,15 @@ public class FormPrincipal extends javax.swing.JFrame {
         return panel;
     }
 
+
+    private JTabbedPane crearPnaleContabilidad(){
+
+        JTabbedPane tabsContabilidad = new JTabbedPane();
+        tabsContabilidad.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        tabsContabilidad.addTab("Catálogo de Cuentas", new CatalogoCuentas());
+
+        return tabsContabilidad;
+    }
     // ==================== MÓDULO FISCAL (Sin cambios - ya está bien) ====================
     
     private JTabbedPane crearPanelFiscal() {

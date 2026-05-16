@@ -1,0 +1,57 @@
+1. Gestión del Catálogo de Cuentas
+Propósito: Permitir al contador estructurar el plan de cuentas de la empresa. Debe mostrarse preferiblemente en forma de árbol dinámico (JTree si usan Swing) o una tabla indentada para reflejar qué cuentas dependen de cuáles (la relación id_cuenta_padre).
+
+Qué debe incluir: * Un árbol visual del catálogo.
+
+Formulario para agregar subcuentas (validando que pertenezca al mismo tipo_cuenta que la cuenta padre: Activo, Pasivo, etc.).
+
+Selector de Empresa para aislamiento multi-tenant.
+
+Nombre del archivo Java: CatalogoCuentasView.java (o CatalogoCuentasForm.java)
+
+2. Registro y Control de Partidas (Libro Diario)
+Propósito: Es el núcleo operativo del módulo. Aquí se digitan los asientos contables diarios. Debe permitir registrar el encabezado de la partida y una tabla dinámica para añadir múltiples filas de cargos (Debe) y abonos (Haber).
+
+Qué debe incluir:
+
+Campos de encabezado: Número de partida, fecha, descripción.
+
+Una tabla (JTable) para los detalles: Cuenta seleccionada, columna Debe y columna Haber.
+
+Validación Senior en tiempo real: Un contador visual que muestre la suma del Debe y la suma del Haber. El botón "Guardar" debe bloquearse si las sumas no son iguales (Regla de Partida Doble).
+
+Control de estado: Botón para guardar como "BORRADOR" o procesar a "MAYORIZADA".
+
+Nombre del archivo Java: LibroDiarioView.java
+
+3. Consulta de Partidas y Mayorización
+Propósito: Una pantalla de búsqueda e histórico donde se listan todas las partidas registradas por rango de fechas o número. Desde aquí, el contador senior revisa las partidas en "BORRADOR" y las aprueba ("MAYORIZA") para que afecten los saldos finales.
+
+Qué debe incluir:
+
+Filtros por rango de fechas, estado (BORRADOR/MAYORIZADA) y número de partida.
+
+Tabla principal con los encabezados de las partidas.
+
+Botón para "Mayorizar" masivamente las partidas seleccionadas.
+
+Al hacer clic en una partida, debe abrir una sub-vista o panel inferior con el desglose de sus cuentas afectadas.
+
+Nombre del archivo Java: HistoricoPartidasView.java
+
+4. Generación de Reportes Financieros (Balances)
+Propósito: La vista de salida del módulo, donde los administradores extraen la información procesada para la toma de decisiones. Todo reporte generado aquí debe filtrar estrictamente por las partidas que tengan el estado MAYORIZADA.
+
+Qué debe incluir:
+
+Selectores de fechas (Mes / Año).
+
+Opciones para exportar o visualizar:
+
+Balanza de Comprobación (Suma de movimientos de todas las cuentas).
+
+Balance General (Cuentas de Activo, Pasivo y Patrimonio).
+
+Estado de Resultados (Cuentas de Ingresos, Costos y Gastos).
+
+Nombre del archivo Java: ReportesFinancierosView.java
