@@ -1,0 +1,88 @@
+-J-Duser.language=
+-J-Duser.country=
+@options
+@packages
+--no-fonts
+-classpath
+'/home/david/.m2/repository/org/postgresql/postgresql/42.7.3/postgresql-42.7.3.jar:/home/david/.m2/repository/org/apache/poi/poi/5.2.5/poi-5.2.5.jar:/home/david/.m2/repository/commons-codec/commons-codec/1.16.0/commons-codec-1.16.0.jar:/home/david/.m2/repository/org/apache/commons/commons-collections4/4.4/commons-collections4-4.4.jar:/home/david/.m2/repository/org/apache/commons/commons-math3/3.6.1/commons-math3-3.6.1.jar:/home/david/.m2/repository/commons-io/commons-io/2.15.0/commons-io-2.15.0.jar:/home/david/.m2/repository/com/zaxxer/SparseBitSet/1.3/SparseBitSet-1.3.jar:/home/david/.m2/repository/org/apache/poi/poi-ooxml/5.2.5/poi-ooxml-5.2.5.jar:/home/david/.m2/repository/org/apache/poi/poi-ooxml-lite/5.2.5/poi-ooxml-lite-5.2.5.jar:/home/david/.m2/repository/org/apache/xmlbeans/xmlbeans/5.2.0/xmlbeans-5.2.0.jar:/home/david/.m2/repository/org/apache/commons/commons-compress/1.25.0/commons-compress-1.25.0.jar:/home/david/.m2/repository/com/github/virtuald/curvesapi/1.08/curvesapi-1.08.jar:/home/david/.m2/repository/com/itextpdf/itextpdf/5.5.13.3/itextpdf-5.5.13.3.jar:/home/david/.m2/repository/org/hibernate/orm/hibernate-core/6.4.4.Final/hibernate-core-6.4.4.Final.jar:/home/david/.m2/repository/jakarta/persistence/jakarta.persistence-api/3.1.0/jakarta.persistence-api-3.1.0.jar:/home/david/.m2/repository/jakarta/transaction/jakarta.transaction-api/2.0.1/jakarta.transaction-api-2.0.1.jar:/home/david/.m2/repository/org/apache/logging/log4j/log4j-api/2.23.1/log4j-api-2.23.1.jar:/home/david/.m2/repository/org/apache/logging/log4j/log4j-core/2.23.1/log4j-core-2.23.1.jar'
+-encoding
+'UTF-8'
+-protected
+-source
+'17'
+-sourcepath
+'/home/david/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java'
+-author
+-bottom
+'Copyright &#169; 2026. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'/home/david/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/target/reports/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'contable 1.0-SNAPSHOT API'
+-use
+-version
+-windowtitle
+'contable 1.0-SNAPSHOT API'
+com.sistema.core.security
+com.sistema.core
+com.sistema
+com.sistema.modulos.fiscal.Views
+com.sistema.modulos.fiscal.Models
+com.sistema.modulos.fiscal.Controllers
+com.sistema.modulos.fiscal
+com.sistema.modulos.fiscal.DAO
+com.sistema.modulos.fiscal.Services
+com.sistema.modulos.contabilidad.Views
+com.sistema.modulos.contabilidad.Models
+com.sistema.modulos.compras.Views
+com.sistema.modulos.compras.Models
+com.sistema.modulos.compras.Controllers
+com.sistema.modulos.compras
+com.sistema.modulos.compras.DAO
+com.sistema.modulos.compras.utils
+com.sistema.modulos.compras.Services
+com.sistema.modulos.bancos.Views
+com.sistema.modulos.bancos.Models
+com.sistema.modulos.bancos.Controllers
+com.sistema.modulos.bancos
+com.sistema.modulos.bancos.DAO
+com.sistema.modulos.bancos.Services
+com.sistema.ui
+/home/david/.m2/repository/org/postgresql/postgresql/42.7.3/postgresql-42.7.3.jar = 1710441706000
+/home/david/.m2/repository/org/apache/poi/poi/5.2.5/poi-5.2.5.jar = 1700257602000
+/home/david/.m2/repository/commons-codec/commons-codec/1.16.0/commons-codec-1.16.0.jar = 1687047316000
+/home/david/.m2/repository/org/apache/commons/commons-collections4/4.4/commons-collections4-4.4.jar = 1562350217000
+/home/david/.m2/repository/org/apache/commons/commons-math3/3.6.1/commons-math3-3.6.1.jar = 1458236108000
+/home/david/.m2/repository/commons-io/commons-io/2.15.0/commons-io-2.15.0.jar = 1697914766000
+/home/david/.m2/repository/com/zaxxer/SparseBitSet/1.3/SparseBitSet-1.3.jar = 1693977127000
+/home/david/.m2/repository/org/apache/poi/poi-ooxml/5.2.5/poi-ooxml-5.2.5.jar = 1700257720000
+/home/david/.m2/repository/org/apache/poi/poi-ooxml-lite/5.2.5/poi-ooxml-lite-5.2.5.jar = 1700300769000
+/home/david/.m2/repository/org/apache/xmlbeans/xmlbeans/5.2.0/xmlbeans-5.2.0.jar = 1699433400000
+/home/david/.m2/repository/org/apache/commons/commons-compress/1.25.0/commons-compress-1.25.0.jar = 1699827360000
+/home/david/.m2/repository/com/github/virtuald/curvesapi/1.08/curvesapi-1.08.jar = 1691716130000
+/home/david/.m2/repository/com/itextpdf/itextpdf/5.5.13.3/itextpdf-5.5.13.3.jar = 1645715303000
+/home/david/.m2/repository/org/hibernate/orm/hibernate-core/6.4.4.Final/hibernate-core-6.4.4.Final.jar = 1707398464000
+/home/david/.m2/repository/jakarta/persistence/jakarta.persistence-api/3.1.0/jakarta.persistence-api-3.1.0.jar = 1645787726000
+/home/david/.m2/repository/jakarta/transaction/jakarta.transaction-api/2.0.1/jakarta.transaction-api-2.0.1.jar = 1648723059000
+/home/david/.m2/repository/org/apache/logging/log4j/log4j-api/2.23.1/log4j-api-2.23.1.jar = 1709728365000
+/home/david/.m2/repository/org/apache/logging/log4j/log4j-core/2.23.1/log4j-core-2.23.1.jar = 1709728366000
+/home/david/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java = 1779423121627
+/home/david/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/target/reports/apidocs/search.html = 1779423225797
+/home/david/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/target/reports/apidocs/index-all.html = 1779423225796
+/home/david/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/target/reports/apidocs/help-doc.html = 1779423225800
+/home/david/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/target/reports/apidocs/tag-search-index.js = 1779423225755
+/home/david/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/target/reports/apidocs/element-list = 1779423225401
+/home/david/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/target/reports/apidocs/index.html = 1779423225705
+/home/david/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/target/reports/apidocs/type-search-index.js = 1779423225754
+/home/david/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/target/reports/apidocs/overview-summary.html = 1779423225798
+/home/david/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/target/reports/apidocs/serialized-form.html = 1779423225547
+/home/david/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/target/reports/apidocs/overview-tree.html = 1779423225702
+/home/david/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/target/reports/apidocs/allclasses-index.html = 1779423225750
+/home/david/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/target/reports/apidocs/member-search-index.js = 1779423225755
+/home/david/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/target/reports/apidocs/module-search-index.js = 1779423225752
+/home/david/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/target/reports/apidocs/allpackages-index.html = 1779423225752
+/home/david/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/target/reports/apidocs/package-search-index.js = 1779423225753
