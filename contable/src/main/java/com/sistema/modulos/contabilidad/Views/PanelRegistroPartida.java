@@ -24,6 +24,7 @@ public class PanelRegistroPartida extends javax.swing.JPanel {
         modelo.addTableModelListener(e -> actualizarTotales());
         
         configurarColumnas();
+        cargarCuentasEnTabla();
     }
 private void actualizarTotales() {
     DefaultTableModel modelo = (DefaultTableModel) tablaPartida.getModel();
@@ -63,7 +64,28 @@ private void actualizarTotales() {
             );
         }
     }
-
+    
+    
+    private void cargarCuentasEnTabla() {
+    try {
+        com.sistema.modulos.contabilidad.DAO.CuentaDAO dao = 
+            new com.sistema.modulos.contabilidad.DAO.CuentaDAO();
+        java.util.List<com.sistema.modulos.contabilidad.Models.Cuenta> cuentas = dao.listar();
+        
+        if (cuentas != null) {
+            javax.swing.JComboBox<com.sistema.modulos.contabilidad.Models.Cuenta> combo = 
+                new javax.swing.JComboBox<>();
+            for (com.sistema.modulos.contabilidad.Models.Cuenta c : cuentas) {
+                combo.addItem(c);
+            }
+            tablaPartida.getColumnModel().getColumn(0).setCellEditor(
+                new javax.swing.DefaultCellEditor(combo)
+            );
+        }
+    } catch (Exception e) {
+        System.out.println("No se pudo cargar cuentas: " + e.getMessage());
+    }
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -184,8 +206,44 @@ private void actualizarTotales() {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        controller.guardarPartida();
-        javax.swing.JOptionPane.showMessageDialog(this, "Partida guardada correctamente");
+        // Recoger datos del encabezado
+String fecha = txtFecha.getText();
+String concepto = txtConcepto.getText();
+
+if (fecha.isEmpty() || concepto.isEmpty()) {
+    javax.swing.JOptionPane.showMessageDialog(this, "Por favor completa la fecha y el concepto.");
+    return;
+}
+
+// Crear la partida
+com.sistema.modulos.contabilidad.Models.Partida partida = 
+    new com.sistema.modulos.contabilidad.Models.Partida();
+partida.setDescripcionGeneral(concepto);
+
+// Recorrer las filas de la tabla
+DefaultTableModel modelo = (DefaultTableModel) tablaPartida.getModel();
+
+if (modelo.getRowCount() == 0) {
+    javax.swing.JOptionPane.showMessageDialog(this, "Agrega al menos una fila.");
+    return;
+}
+
+for (int i = 0; i < modelo.getRowCount(); i++) {
+    com.sistema.modulos.contabilidad.Models.DetallePartida detalle = 
+        new com.sistema.modulos.contabilidad.Models.DetallePartida();
+    
+    Object debe = modelo.getValueAt(i, 1);
+    Object haber = modelo.getValueAt(i, 2);
+    
+    detalle.setDebe(new java.math.BigDecimal(debe != null ? debe.toString() : "0"));
+    detalle.setHaber(new java.math.BigDecimal(haber != null ? haber.toString() : "0"));
+    
+    partida.addDetalle(detalle);
+}
+
+
+javax.swing.JOptionPane.showMessageDialog(this, "Partida lista para guardar. " + 
+    modelo.getRowCount() + " detalles agregados.");
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnAgregarFilaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarFilaActionPerformed
