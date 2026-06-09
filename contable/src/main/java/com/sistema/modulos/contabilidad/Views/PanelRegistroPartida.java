@@ -255,13 +255,7 @@ javax.swing.JOptionPane.showMessageDialog(this, "Partida lista para guardar. " +
         // TODO add your handling code here:
     }//GEN-LAST:event_txtFechaActionPerformed
 
-public static void main(String[] args) {
-    javax.swing.JFrame frame = new javax.swing.JFrame("Prueba");
-    frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
-    frame.add(new PanelRegistroPartida());
-    frame.pack();
-    frame.setVisible(true);
-}
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarFila;
