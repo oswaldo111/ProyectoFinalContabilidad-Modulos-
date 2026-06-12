@@ -1,11 +1,9 @@
-package com.sistema.modulos.contabilidad;
+package com.sistema.modulos.contabilidad.DAO;
 
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-import com.sistema.modulos.contabilidad.DAO.CuentaDAO;
-import com.sistema.modulos.contabilidad.DAO.PartidaDAO;
 import com.sistema.modulos.contabilidad.Models.Cuenta;
 import com.sistema.modulos.contabilidad.Models.DetallePartida;
 import com.sistema.modulos.contabilidad.Models.Partida;
