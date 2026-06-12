@@ -170,7 +170,7 @@ public class FormPrincipal extends javax.swing.JFrame {
         JTabbedPane tabsContabilidad = new JTabbedPane();
         tabsContabilidad.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         tabsContabilidad.addTab("Catálogo de Cuentas", new CatalogoCuentas());
-
+        tabsContabilidad.addTab("Registro de Partidas", new com.sistema.modulos.contabilidad.Views.PanelRegistroPartida());
         return tabsContabilidad;
     }
     // ==================== MÓDULO FISCAL (Sin cambios - ya está bien) ====================

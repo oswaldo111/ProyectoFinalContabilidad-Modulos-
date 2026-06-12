@@ -6,10 +6,12 @@
 /Users/mynor/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java/com/sistema/modulos/bancos/Controllers/BancosController.java
 /Users/mynor/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java/com/sistema/modulos/contabilidad/DAO/DetallePartidaDAO.java
 /Users/mynor/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java/com/sistema/modulos/bancos/Views/ConciliacionView.java
+/Users/mynor/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java/com/sistema/modulos/contabilidad/DAO/PartidaDAO.java
 /Users/mynor/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java/com/sistema/modulos/compras/DAO/CompraDAO.java
 /Users/mynor/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java/com/sistema/core/DBConnection.java
 /Users/mynor/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java/com/sistema/modulos/compras/Controllers/ComprasController.java
 /Users/mynor/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java/com/sistema/modulos/contabilidad/Views/CatalogoCuentas.java
+/Users/mynor/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java/com/sistema/modulos/contabilidad/Controllers/PruebaController.java
 /Users/mynor/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java/com/sistema/modulos/contabilidad/DAO/CuentaDAO.java
 /Users/mynor/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java/com/sistema/modulos/compras/Views/PanelProveedores.java
 /Users/mynor/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java/com/sistema/modulos/compras/Services/ReporteService.java
@@ -37,6 +39,7 @@
 /Users/mynor/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java/com/sistema/modulos/bancos/Services/CuentaBancariaService.java
 /Users/mynor/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java/com/sistema/modulos/contabilidad/Models/Partida.java
 /Users/mynor/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java/com/sistema/modulos/fiscal/DAO/LibroComprasDAO.java
+/Users/mynor/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java/com/sistema/modulos/contabilidad/TestPartidaDAO.java
 /Users/mynor/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java/com/sistema/modulos/fiscal/Services/LibroVentasService.java
 /Users/mynor/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java/com/sistema/modulos/compras/Views/PanelReporteCompras.java
 /Users/mynor/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java/com/sistema/modulos/bancos/Services/ExportadorCSV.java
@@ -46,6 +49,7 @@
 /Users/mynor/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java/com/sistema/modulos/contabilidad/Models/Cuenta.java
 /Users/mynor/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java/com/sistema/modulos/compras/DAO/ProveedorDAO.java
 /Users/mynor/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java/com/sistema/modulos/fiscal/Views/LibroComprasView.java
+/Users/mynor/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java/com/sistema/modulos/contabilidad/Controllers/CuentaController.java
 /Users/mynor/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java/com/sistema/modulos/compras/Views/PanelCompras.java
 /Users/mynor/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java/com/sistema/modulos/compras/Services/PagoService.java
 /Users/mynor/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java/com/sistema/modulos/fiscal/Services/LiquidacionService.java
@@ -61,7 +65,9 @@
 /Users/mynor/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java/com/sistema/modulos/contabilidad/Views/PanelRegistroPartida.java
 /Users/mynor/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java/com/sistema/modulos/compras/Models/Producto.java
 /Users/mynor/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java/com/sistema/modulos/bancos/Views/MovimientosView.java
+/Users/mynor/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java/com/sistema/modulos/contabilidad/Services/CuentaService.java
 /Users/mynor/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java/com/sistema/modulos/bancos/Models/ConciliacionBancaria.java
 /Users/mynor/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java/com/sistema/modulos/fiscal/Models/LiquidacionIva.java
 /Users/mynor/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java/com/sistema/modulos/fiscal/Models/RegistroLibroCompras.java
 /Users/mynor/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java/com/sistema/modulos/bancos/Models/MovimientoBancario.java
+/Users/mynor/NetBeansProjects/ProyectoFinalContabilidad-Modulos-/contable/src/main/java/com/sistema/modulos/contabilidad/Services/DetallePartidaDAOService.java
