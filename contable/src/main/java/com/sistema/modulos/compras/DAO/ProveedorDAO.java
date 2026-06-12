@@ -169,9 +169,14 @@ public class ProveedorDAO {
             rs = pstmt.executeQuery();
             if (rs.next()) {
                 proveedor.setIdEntidad(rs.getInt(1));
+                DBConnection.commit(conn);
                 return true;
             }
+            DBConnection.commit(conn);
             return false;
+        } catch (SQLException e) {
+            DBConnection.rollback(conn);
+            throw e;
         } finally {
             try { if (rs != null) rs.close(); } catch (SQLException e) { e.printStackTrace(); }
             try { if (pstmt != null) pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
@@ -198,7 +203,12 @@ public class ProveedorDAO {
             pstmt.setInt(7, proveedor.getIdEntidad());
             pstmt.setInt(8, SessionManager.getIdEmpresa());
             
-            return pstmt.executeUpdate() > 0;
+            boolean exito = pstmt.executeUpdate() > 0;
+            DBConnection.commit(conn);
+            return exito;
+        } catch (SQLException e) {
+            DBConnection.rollback(conn);
+            throw e;
         } finally {
             try { if (pstmt != null) pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
             try { if (conn != null) DBConnection.closeConnection(conn); } catch (Exception e) { e.printStackTrace(); }
@@ -219,6 +229,10 @@ public class ProveedorDAO {
             if (rs.next() && rs.getInt(1) > 0) {
                 throw new SQLException("No se puede eliminar el proveedor porque tiene compras registradas");
             }
+            DBConnection.commit(conn);
+        } catch (SQLException e) {
+            DBConnection.rollback(conn);
+            throw e;
         } finally {
             try { if (rs != null) rs.close(); } catch (SQLException e) { e.printStackTrace(); }
             try { if (pstmt != null) pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
@@ -232,7 +246,12 @@ public class ProveedorDAO {
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, id);
             pstmt.setInt(2, SessionManager.getIdEmpresa());
-            return pstmt.executeUpdate() > 0;
+            boolean exito = pstmt.executeUpdate() > 0;
+            DBConnection.commit(conn);
+            return exito;
+        } catch (SQLException e) {
+            DBConnection.rollback(conn);
+            throw e;
         } finally {
             try { if (pstmt != null) pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
             try { if (conn != null) DBConnection.closeConnection(conn); } catch (Exception e) { e.printStackTrace(); }

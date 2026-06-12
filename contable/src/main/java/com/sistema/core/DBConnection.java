@@ -12,16 +12,19 @@ public class DBConnection {
     private static final String USER = "postgres.acywsjxomurvklledhrb";
     private static final String PASSWORD = "isU0hqUbGHmr55xb";
     
+    private static Connection cachedConnection = null;
+    
     private DBConnection() {}
     public static Connection getConnection() throws SQLException {
         try {
             Class.forName("org.postgresql.Driver");
-            Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-            conn.setAutoCommit(false);
-            System.out.println("Conexión exitosa a la base de datos");
-            System.out.println("URL: " + URL + " | Usuario: " + USER);
-            System.out.println("Cargando formulario...");
-            return conn;
+            if (cachedConnection == null || cachedConnection.isClosed()) {
+                cachedConnection = DriverManager.getConnection(URL, USER, PASSWORD);
+                cachedConnection.setAutoCommit(false);
+                System.out.println("Conexión exitosa a la base de datos");
+                System.out.println("URL: " + URL + " | Usuario: " + USER);
+            }
+            return cachedConnection;
         } catch (ClassNotFoundException e) {
             throw new SQLException("Driver PostgreSQL no encontrado", e);
         }
@@ -39,16 +42,8 @@ public class DBConnection {
         }
     }
     
-  
+   
     public static void closeConnection(Connection conn) {
-        if (conn != null) {
-            try {
-                if (!conn.isClosed()) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                System.err.println(" Error al cerrar conexión: " + e.getMessage());
-            }
-        }
+        // No cerramos la conexión cacheada para reutilizarla
     }
 }

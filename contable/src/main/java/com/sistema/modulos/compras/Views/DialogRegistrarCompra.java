@@ -9,6 +9,7 @@ import com.sistema.modulos.compras.Models.Proveedor;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.*;
 import java.awt.*;
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -74,13 +75,15 @@ public class DialogRegistrarCompra extends JDialog {
         gbc.gridx = 0; gbc.gridy = 1;
         panelDatos.add(new JLabel("N° Documento:*"), gbc);
         gbc.gridx = 1;
-        txtNumeroFactura = new JTextField(12);
+        txtNumeroFactura = new JTextField(20);
+        soloNumeros(txtNumeroFactura);
         panelDatos.add(txtNumeroFactura, gbc);
         
         gbc.gridx = 2;
         panelDatos.add(new JLabel("Fecha Vencimiento:*"), gbc);
         gbc.gridx = 3;
-        txtFechaVencimiento = new JTextField(LocalDate.now().plusDays(30).toString(), 10);
+        txtFechaVencimiento = new JTextField(LocalDate.now().plusDays(30).toString(), 12);
+        configurarFecha(txtFechaVencimiento);
         panelDatos.add(txtFechaVencimiento, gbc);
         
         JPanel panelProductos = new JPanel(new GridBagLayout());
@@ -100,13 +103,15 @@ public class DialogRegistrarCompra extends JDialog {
         gbcProd.gridx = 2;
         panelProductos.add(new JLabel("Cantidad:*"), gbcProd);
         gbcProd.gridx = 3;
-        txtCantidad = new JTextField(6);
+        txtCantidad = new JTextField(8);
+        soloNumeros(txtCantidad);
         panelProductos.add(txtCantidad, gbcProd);
         
         gbcProd.gridx = 4;
         panelProductos.add(new JLabel("Precio Unit.:*"), gbcProd);
         gbcProd.gridx = 5;
-        txtPrecioUnitario = new JTextField(8);
+        txtPrecioUnitario = new JTextField(10);
+        soloNumerosConDecimal(txtPrecioUnitario);
         panelProductos.add(txtPrecioUnitario, gbcProd);
         
         gbcProd.gridx = 6;
@@ -260,4 +265,65 @@ public class DialogRegistrarCompra extends JDialog {
     }
     
     public boolean isCompraRegistrada() { return compraRegistrada; }
+
+    private void soloNumeros(JTextField campo) {
+        ((AbstractDocument) campo.getDocument()).setDocumentFilter(new DocumentFilter() {
+            @Override
+            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+                String limpio = text != null ? text.replaceAll("[^0-9]", "") : "";
+                if (limpio.isEmpty() && (text == null || text.isEmpty())) {
+                    super.replace(fb, offset, length, text, attrs);
+                    return;
+                }
+                String actual = fb.getDocument().getText(0, fb.getDocument().getLength());
+                String nuevo = actual.substring(0, offset) + limpio + actual.substring(offset + length);
+                super.replace(fb, 0, actual.length(), nuevo, attrs);
+            }
+        });
+    }
+
+    private void soloNumerosConDecimal(JTextField campo) {
+        ((AbstractDocument) campo.getDocument()).setDocumentFilter(new DocumentFilter() {
+            @Override
+            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+                if (text == null) {
+                    super.replace(fb, offset, length, null, attrs);
+                    return;
+                }
+                String actual = fb.getDocument().getText(0, fb.getDocument().getLength());
+                String antes = actual.substring(0, offset);
+                String despues = actual.substring(offset + length);
+                String nuevo = antes + text + despues;
+                if (nuevo.isEmpty()) {
+                    super.replace(fb, 0, actual.length(), "", attrs);
+                    return;
+                }
+                if (!nuevo.matches("^\\d*\\.?\\d*$")) return;
+                int puntos = nuevo.length() - nuevo.replace(".", "").length();
+                if (puntos > 1) return;
+                super.replace(fb, 0, actual.length(), nuevo, attrs);
+            }
+        });
+    }
+
+    private void configurarFecha(JTextField campo) {
+        ((AbstractDocument) campo.getDocument()).setDocumentFilter(new DocumentFilter() {
+            @Override
+            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+                String digitos = text != null ? text.replaceAll("[^0-9]", "") : "";
+                String actual = fb.getDocument().getText(0, fb.getDocument().getLength());
+                String soloDigitos = actual.replaceAll("[^0-9]", "");
+                int inicio = Math.min(offset, soloDigitos.length());
+                int fin = Math.min(offset + length, soloDigitos.length());
+                String nuevosDigitos = soloDigitos.substring(0, inicio) + digitos + soloDigitos.substring(fin);
+                if (nuevosDigitos.length() > 8) return;
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < nuevosDigitos.length(); i++) {
+                    if (sb.length() == 4 || sb.length() == 7) sb.append('-');
+                    sb.append(nuevosDigitos.charAt(i));
+                }
+                super.replace(fb, 0, actual.length(), sb.toString(), attrs);
+            }
+        });
+    }
 }

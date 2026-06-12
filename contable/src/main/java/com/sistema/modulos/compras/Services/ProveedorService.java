@@ -15,11 +15,24 @@ public class ProveedorService {
     }
     
     public void validarProveedor(Proveedor proveedor) {
-        if (proveedor.getNombre() == null || proveedor.getNombre().trim().isEmpty()) {
+        String nombre = proveedor.getNombre();
+        String nrc = proveedor.getNrc();
+        String nit = proveedor.getNit();
+
+        if (nombre == null || nombre.trim().isEmpty()) {
             throw new IllegalArgumentException("El nombre del proveedor es obligatorio");
         }
-        if (proveedor.getNit() == null || proveedor.getNit().trim().isEmpty()) {
+        if (nrc == null || nrc.trim().isEmpty()) {
+            throw new IllegalArgumentException("El NRC es obligatorio");
+        }
+        if (!nrc.trim().matches("\\d{8}")) {
+            throw new IllegalArgumentException("El NRC debe tener exactamente 8 d\u00EDgitos num\u00E9ricos (ej: 12345678)");
+        }
+        if (nit == null || nit.trim().isEmpty()) {
             throw new IllegalArgumentException("El NIT del proveedor es obligatorio");
+        }
+        if (!nit.trim().matches("\\d{4}-\\d{6}-\\d{3}-\\d{1}")) {
+            throw new IllegalArgumentException("El NIT debe tener el formato 0000-000000-000-0 (14 d\u00EDgitos)");
         }
     }
     

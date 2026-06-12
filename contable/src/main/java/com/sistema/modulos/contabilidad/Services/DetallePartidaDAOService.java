@@ -5,12 +5,12 @@ import java.util.List;
 import com.sistema.modulos.contabilidad.DAO.DetallePartidaDAO;
 import com.sistema.modulos.contabilidad.Models.DetallePartida;
 
-public class DetallePartidaService {
+public class DetallePartidaDAOService {
 
     private DetallePartidaDAO detallePartidaDAO;
 
     // Constructor
-    public DetallePartidaService() {
+    public DetallePartidaDAOService() {
         this.detallePartidaDAO = new DetallePartidaDAO();
     }
 

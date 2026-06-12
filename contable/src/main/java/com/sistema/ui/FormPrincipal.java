@@ -16,22 +16,36 @@ import com.sistema.modulos.compras.Views.PanelCompras;
 import com.sistema.modulos.compras.Views.PanelProveedores;
 import com.sistema.modulos.compras.Views.PanelReporteCompras;
 import com.sistema.modulos.contabilidad.Views.CatalogoCuentas;
+import com.sistema.core.DBConnection;
 import com.sistema.core.security.SessionManager;
 
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.FlowLayout;
 import java.awt.BorderLayout;
+import java.awt.Frame;
+import java.awt.GridLayout;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 /**
@@ -68,7 +82,7 @@ public class FormPrincipal extends javax.swing.JFrame {
     }
     
     private void configurarVentana() {
-        setTitle("TEST MODULOS FISCAL & COMPRAS");
+        setTitle("Sistema Contable");
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setExtendedState(MAXIMIZED_BOTH);
         setLocationRelativeTo(null);
@@ -116,7 +130,7 @@ public class FormPrincipal extends javax.swing.JFrame {
         JPanel info = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
         info.setOpaque(false);
         
-        JLabel lblTitulo = new JLabel("TEST MODULOS FISCAL & COMPRAS");
+        JLabel lblTitulo = new JLabel("MODULOS CONTABLES");
         lblTitulo.setForeground(Color.WHITE);
         lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 16));
         
@@ -136,15 +150,15 @@ public class FormPrincipal extends javax.swing.JFrame {
         JPanel acciones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         acciones.setOpaque(false);
         
-        JButton btnAyuda = new JButton("Ayuda");
-        btnAyuda.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-        btnAyuda.setBackground(new Color(52, 152, 219));
-        btnAyuda.setForeground(Color.WHITE);
-        btnAyuda.setFocusPainted(false);
-        btnAyuda.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnAyuda.addActionListener(e -> mostrarAyuda());
+        JButton btnCerrarSesion = new JButton("Cerrar Sesi\u00F3n");
+        btnCerrarSesion.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+        btnCerrarSesion.setBackground(new Color(192, 57, 43));
+        btnCerrarSesion.setForeground(Color.WHITE);
+        btnCerrarSesion.setFocusPainted(false);
+        btnCerrarSesion.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnCerrarSesion.addActionListener(e -> cerrarSesion());
         
-        acciones.add(btnAyuda);
+        acciones.add(btnCerrarSesion);
         panel.add(info, BorderLayout.WEST);
         panel.add(acciones, BorderLayout.EAST);
         return panel;
@@ -247,13 +261,73 @@ public class FormPrincipal extends javax.swing.JFrame {
         return btn;
     }
 
-    private void mostrarAyuda() {
-        JOptionPane.showMessageDialog(this,
-            "Ayuda:\n• Pestañas superiores = cambiar entre módulos principales\n" +
-            "• Dentro de cada módulo = pestañas internas para cada funcionalidad\n" +
-            "• La sesión se comparte automáticamente vía SessionManager\n" +
-            "• Todos los módulos siguen el patrón MVC para mejor mantenimiento",
-            "Ayuda del Sistema", JOptionPane.INFORMATION_MESSAGE);
+    private void cerrarSesion() {
+        List<Integer> empresas = new ArrayList<>();
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement("SELECT DISTINCT id_empresa FROM entidades ORDER BY id_empresa");
+             ResultSet rs = pstmt.executeQuery()) {
+            while (rs.next()) empresas.add(rs.getInt(1));
+        } catch (Exception e) {
+            empresas.add(1);
+            empresas.add(2);
+        }
+        if (empresas.isEmpty()) {
+            empresas.add(1);
+            empresas.add(2);
+        }
+
+        JComboBox<Integer> comboEmpresas = new JComboBox<>(empresas.toArray(new Integer[0]));
+
+        JPanel panel = new JPanel(new BorderLayout(8, 8));
+        JLabel lblMensaje = new JLabel("Seleccione con qu\u00E9 empresa desea iniciar sesi\u00F3n:");
+        lblMensaje.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        panel.add(lblMensaje, BorderLayout.NORTH);
+        panel.add(comboEmpresas, BorderLayout.CENTER);
+
+        int opcion = JOptionPane.showConfirmDialog(this, panel,
+            "Cerrar Sesi\u00F3n", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (opcion != JOptionPane.OK_OPTION) return;
+
+        try {
+            int idEmpresa = Integer.parseInt(comboEmpresas.getSelectedItem().toString().trim());
+            if (idEmpresa <= 0) throw new NumberFormatException();
+            SessionManager.iniciarSesion(idEmpresa, "Empresa " + idEmpresa, 1, "usuario");
+
+            dispose();
+
+            JDialog loading = new JDialog((Frame) null, "Cargando", false);
+            JPanel panelLoading = new JPanel(new BorderLayout(10, 10));
+            panelLoading.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
+            JLabel lblCargando = new JLabel("Cargando empresa, espere...");
+            lblCargando.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+            JProgressBar barra = new JProgressBar(0, 100);
+            barra.setStringPainted(true);
+            barra.setFont(new Font("Segoe UI", Font.BOLD, 11));
+            panelLoading.add(lblCargando, BorderLayout.NORTH);
+            panelLoading.add(barra, BorderLayout.CENTER);
+            loading.add(panelLoading);
+            loading.setSize(300, 120);
+            loading.setLocationRelativeTo(null);
+            loading.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+            loading.setVisible(true);
+
+            new Thread(() -> {
+                for (int i = 0; i <= 100; i++) {
+                    final int p = i;
+                    try { Thread.sleep(10); } catch (InterruptedException ex) { break; }
+                    SwingUtilities.invokeLater(() -> barra.setValue(p));
+                }
+                SwingUtilities.invokeLater(() -> {
+                    FormPrincipal nuevo = new FormPrincipal();
+                    nuevo.setExtendedState(FormPrincipal.MAXIMIZED_BOTH);
+                    nuevo.setLocationRelativeTo(null);
+                    nuevo.setVisible(true);
+                    loading.dispose();
+                });
+            }).start();
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "ID de empresa inv\u00E1lido", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     /**

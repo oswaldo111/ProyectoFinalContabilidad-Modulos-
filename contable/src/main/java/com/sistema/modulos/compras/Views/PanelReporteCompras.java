@@ -8,6 +8,7 @@ import com.sistema.modulos.compras.utils.ExportadorPDF;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.*;
 import java.awt.*;
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -55,11 +56,13 @@ public class PanelReporteCompras extends JPanel {
         panelFiltros.setBorder(BorderFactory.createTitledBorder("Filtros del Reporte"));
         
         panelFiltros.add(new JLabel("Fecha Inicio:"));
-        txtFechaInicio = new JTextField(LocalDate.now().withDayOfMonth(1).toString(), 10);
+        txtFechaInicio = new JTextField(LocalDate.now().withDayOfMonth(1).toString(), 12);
+        configurarFecha(txtFechaInicio);
         panelFiltros.add(txtFechaInicio);
         
         panelFiltros.add(new JLabel("Fecha Fin:"));
-        txtFechaFin = new JTextField(LocalDate.now().toString(), 10);
+        txtFechaFin = new JTextField(LocalDate.now().toString(), 12);
+        configurarFecha(txtFechaFin);
         panelFiltros.add(txtFechaFin);
         
         btnGenerar = new JButton("Generar Reporte");
@@ -224,6 +227,27 @@ public class PanelReporteCompras extends JPanel {
         ExportadorPDF.exportar(tablaReporte, titulo, titulo);
     }
     
+    private void configurarFecha(JTextField campo) {
+        ((AbstractDocument) campo.getDocument()).setDocumentFilter(new DocumentFilter() {
+            @Override
+            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+                String digitos = text != null ? text.replaceAll("[^0-9]", "") : "";
+                String actual = fb.getDocument().getText(0, fb.getDocument().getLength());
+                String soloDigitos = actual.replaceAll("[^0-9]", "");
+                int inicio = Math.min(offset, soloDigitos.length());
+                int fin = Math.min(offset + length, soloDigitos.length());
+                String nuevosDigitos = soloDigitos.substring(0, inicio) + digitos + soloDigitos.substring(fin);
+                if (nuevosDigitos.length() > 8) return;
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < nuevosDigitos.length(); i++) {
+                    if (sb.length() == 4 || sb.length() == 7) sb.append('-');
+                    sb.append(nuevosDigitos.charAt(i));
+                }
+                super.replace(fb, 0, actual.length(), sb.toString(), attrs);
+            }
+        });
+    }
+
     // Renderer de moneda (sin cambios)
     class FormatoMonedaRenderer extends DefaultTableCellRenderer {
         @Override

@@ -7,6 +7,7 @@ import com.sistema.modulos.compras.Models.DetalleCompra;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.text.*;
 
 import java.awt.*;
 import java.math.BigDecimal;
@@ -68,11 +69,15 @@ public class PanelCompras extends JPanel {
         panelFiltros.add(comboFiltroEstado);
         
         panelFiltros.add(new JLabel("Fecha Desde:"));
-        txtFechaDesde = new JTextField(8);
+        txtFechaDesde = new JTextField(12);
+        txtFechaDesde.setText(java.time.LocalDate.now().withDayOfMonth(1).toString());
+        configurarFecha(txtFechaDesde);
         panelFiltros.add(txtFechaDesde);
         
         panelFiltros.add(new JLabel("Hasta:"));
-        txtFechaHasta = new JTextField(8);
+        txtFechaHasta = new JTextField(12);
+        txtFechaHasta.setText(java.time.LocalDate.now().toString());
+        configurarFecha(txtFechaHasta);
         panelFiltros.add(txtFechaHasta);
         
         chkProximasVencer = new JCheckBox("Próximas a vencer (7 días)");
@@ -292,6 +297,27 @@ public class PanelCompras extends JPanel {
         }
     }
     
+    private void configurarFecha(JTextField campo) {
+        ((AbstractDocument) campo.getDocument()).setDocumentFilter(new DocumentFilter() {
+            @Override
+            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+                String digitos = text != null ? text.replaceAll("[^0-9]", "") : "";
+                String actual = fb.getDocument().getText(0, fb.getDocument().getLength());
+                String soloDigitos = actual.replaceAll("[^0-9]", "");
+                int inicio = Math.min(offset, soloDigitos.length());
+                int fin = Math.min(offset + length, soloDigitos.length());
+                String nuevosDigitos = soloDigitos.substring(0, inicio) + digitos + soloDigitos.substring(fin);
+                if (nuevosDigitos.length() > 8) return;
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < nuevosDigitos.length(); i++) {
+                    if (sb.length() == 4 || sb.length() == 7) sb.append('-');
+                    sb.append(nuevosDigitos.charAt(i));
+                }
+                super.replace(fb, 0, actual.length(), sb.toString(), attrs);
+            }
+        });
+    }
+
     // ==================== RENDERERS (sin cambios) ====================
     
     class FormatoMonedaRenderer extends DefaultTableCellRenderer {
