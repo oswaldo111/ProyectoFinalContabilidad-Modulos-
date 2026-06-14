@@ -4,6 +4,11 @@
  */
 package com.sistema.ui;
 
+import com.sistema.modulos.bancos.Controllers.BancosController;
+import com.sistema.modulos.bancos.Views.ConciliacionView;
+import com.sistema.modulos.bancos.Views.CuentasBancariasView;
+import com.sistema.modulos.bancos.Views.MovimientosView;
+
 import com.sistema.modulos.fiscal.Controllers.FiscalController;
 import com.sistema.modulos.fiscal.Views.LibroComprasView;
 import com.sistema.modulos.fiscal.Views.LibroVentasView;
@@ -64,6 +69,7 @@ public class FormPrincipal extends javax.swing.JFrame {
     private ProveedorController proveedorController;
     private CompraController compraController;
     private ReporteController reporteController;
+    private BancosController bancosController;
 
     /**
      * Creates new form FormPrincipal
@@ -105,6 +111,8 @@ public class FormPrincipal extends javax.swing.JFrame {
         
         // Módulo de Compras - ahora con JTabbedPane interno (sin CardLayout)
         tabsModulos.addTab("Compras", crearPanelComprasConTabs());
+
+        tabsModulos.addTab("Bancos", crearPanelBancos());
 
         tabsModulos.addTab("Contabilidad", crearPnaleContabilidad());
         
@@ -223,6 +231,27 @@ public class FormPrincipal extends javax.swing.JFrame {
         tabsCompras.addTab("Libro Compras IVA", reporteView);
 
         return tabsCompras;
+    }
+
+    // ==================== MÓDULO BANCOS ====================
+
+    private JTabbedPane crearPanelBancos() {
+        CuentasBancariasView cuentasView = new CuentasBancariasView();
+        MovimientosView movimientosView = new MovimientosView();
+        ConciliacionView conciliacionView = new ConciliacionView();
+
+        bancosController = new BancosController(cuentasView, movimientosView, conciliacionView);
+        cuentasView.setController(bancosController);
+        movimientosView.setController(bancosController);
+        conciliacionView.setController(bancosController);
+
+        JTabbedPane tabsBancos = new JTabbedPane();
+        tabsBancos.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        tabsBancos.addTab("Cuentas Bancarias", cuentasView);
+        tabsBancos.addTab("Movimientos", movimientosView);
+        tabsBancos.addTab("Conciliaci\u00F3n", conciliacionView);
+
+        return tabsBancos;
     }
 
     // ==================== COMPONENTES COMUNES ====================
