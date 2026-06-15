@@ -219,6 +219,8 @@ if (fecha.isEmpty() || concepto.isEmpty()) {
 com.sistema.modulos.contabilidad.Models.Partida partida = 
     new com.sistema.modulos.contabilidad.Models.Partida();
 partida.setDescripcionGeneral(concepto);
+partida.setIdEmpresa(com.sistema.core.security.SessionManager.getIdEmpresa());
+partida.setNumeroPartida(1);
 
 // Recorrer las filas de la tabla
 DefaultTableModel modelo = (DefaultTableModel) tablaPartida.getModel();
@@ -235,15 +237,38 @@ for (int i = 0; i < modelo.getRowCount(); i++) {
     Object debe = modelo.getValueAt(i, 1);
     Object haber = modelo.getValueAt(i, 2);
     
+    Object cuentaSeleccionada = modelo.getValueAt(i, 0);
+if (cuentaSeleccionada == null || !(cuentaSeleccionada instanceof com.sistema.modulos.contabilidad.Models.Cuenta)) {
+    javax.swing.JOptionPane.showMessageDialog(this, "Selecciona una cuenta válida en la fila " + (i+1));
+    return;
+}
+detalle.setIdCuenta((com.sistema.modulos.contabilidad.Models.Cuenta) cuentaSeleccionada);
+
     detalle.setDebe(new java.math.BigDecimal(debe != null ? debe.toString() : "0"));
     detalle.setHaber(new java.math.BigDecimal(haber != null ? haber.toString() : "0"));
     
     partida.addDetalle(detalle);
 }
 
+try {
+    java.text.SimpleDateFormat formato = new java.text.SimpleDateFormat("yyyy-MM-dd");
+    java.util.Date fechaPartida = formato.parse(fecha);
+    partida.setFecha(fechaPartida);
+} catch (java.text.ParseException e) {
+    javax.swing.JOptionPane.showMessageDialog(this, "Formato de fecha inválido. Usa YYYY-MM-DD");
+    return;
+}
 
-javax.swing.JOptionPane.showMessageDialog(this, "Partida lista para guardar. " + 
-    modelo.getRowCount() + " detalles agregados.");
+boolean exito = controller.crearPartida(partida);
+
+if (exito) {
+    javax.swing.JOptionPane.showMessageDialog(this, "Partida guardada correctamente.");
+    txtFecha.setText("");
+    txtConcepto.setText("");
+    modelo.setRowCount(0);
+} else {
+    javax.swing.JOptionPane.showMessageDialog(this, "Error al guardar la partida. Verifica los datos.");
+}
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnAgregarFilaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarFilaActionPerformed
