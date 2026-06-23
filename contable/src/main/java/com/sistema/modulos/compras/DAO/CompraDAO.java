@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
+//test prueba
 public class CompraDAO {
     
     public List<Compra> obtenerTodas() {
