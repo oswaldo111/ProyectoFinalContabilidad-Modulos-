@@ -21,6 +21,11 @@ import com.sistema.modulos.compras.Views.PanelCompras;
 import com.sistema.modulos.compras.Views.PanelProveedores;
 import com.sistema.modulos.compras.Views.PanelReporteCompras;
 import com.sistema.modulos.contabilidad.Views.CatalogoCuentas;
+
+import com.sistema.modulos.ventas.Paneles.JPCliente;
+import com.sistema.modulos.ventas.Paneles.JPVentas;
+import com.sistema.modulos.ventas.Paneles.JPCuentasPorCobrar;
+import com.sistema.modulos.ventas.Paneles.JPLibroVentas;
 import com.sistema.core.DBConnection;
 import com.sistema.core.security.SessionManager;
 
@@ -54,16 +59,16 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 /**
- * FORMULARIO PRINCIPAL UNIFICADO - GT6/GT1
- * Integra Módulos: Fiscal (IVA) y Compras con patrón MVC y JTabbedPane
- * Compatible con com.sistema.core.security.SessionManager
- * 
+ * FORMULARIO PRINCIPAL UNIFICADO - GT6/GT1 Integra Módulos: Fiscal (IVA) y
+ * Compras con patrón MVC y JTabbedPane Compatible con
+ * com.sistema.core.security.SessionManager
+ *
  * @author R5 8500G
  */
 public class FormPrincipal extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FormPrincipal.class.getName());
-    
+
     // Referencias para comunicación entre módulos (opcional)
     private FiscalController fiscalController;
     private ProveedorController proveedorController;
@@ -75,10 +80,10 @@ public class FormPrincipal extends javax.swing.JFrame {
      * Creates new form FormPrincipal
      */
     public FormPrincipal() {
-        initComponents();         
-        inicializarUnificado();   
+        initComponents();
+        inicializarUnificado();
     }
-    
+
     /**
      * Inicializa la interfaz unificada con módulos integrados
      */
@@ -86,7 +91,7 @@ public class FormPrincipal extends javax.swing.JFrame {
         configurarVentana();
         crearInterfazUnificada();
     }
-    
+
     private void configurarVentana() {
         setTitle("Sistema Contable");
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -98,32 +103,34 @@ public class FormPrincipal extends javax.swing.JFrame {
     private void crearInterfazUnificada() {
         JPanel panelRaiz = new JPanel(new BorderLayout());
         panelRaiz.setBackground(Color.WHITE);
-        
+
         // 1. Header superior
         JPanel header = crearHeader();
-        
+
         // 2. Pestañas principales de módulos
         JTabbedPane tabsModulos = new JTabbedPane(JTabbedPane.TOP);
         tabsModulos.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        
+
         // Módulo Fiscal (IVA) - ya con MVC y JTabbedPane interno
         tabsModulos.addTab("Fiscal (IVA)", crearPanelFiscal());
-        
+
         // Módulo de Compras - ahora con JTabbedPane interno (sin CardLayout)
         tabsModulos.addTab("Compras", crearPanelComprasConTabs());
+
+        tabsModulos.addTab("Ventas", crearPanelVentas());
 
         tabsModulos.addTab("Bancos", crearPanelBancos());
 
         tabsModulos.addTab("Contabilidad", crearPnaleContabilidad());
-        
+
         // 3. Status bar inferior
         JPanel statusBar = crearStatusBar();
-        
+
         // Ensamblar
         panelRaiz.add(header, BorderLayout.NORTH);
         panelRaiz.add(tabsModulos, BorderLayout.CENTER);
         panelRaiz.add(statusBar, BorderLayout.SOUTH);
-        
+
         setContentPane(panelRaiz);
         revalidate();
         repaint();
@@ -137,27 +144,27 @@ public class FormPrincipal extends javax.swing.JFrame {
 
         JPanel info = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
         info.setOpaque(false);
-        
+
         JLabel lblTitulo = new JLabel("MODULOS CONTABLES");
         lblTitulo.setForeground(Color.WHITE);
         lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        
+
         int idEmpresa = SessionManager.getIdEmpresa();
         String nombreEmpresa = SessionManager.getNombreEmpresa();
-        String txtEmpresa = (!nombreEmpresa.isEmpty()) 
-            ? nombreEmpresa + " (ID: " + idEmpresa + ")" 
-            : "Empresa ID: " + idEmpresa;
-            
+        String txtEmpresa = (!nombreEmpresa.isEmpty())
+                ? nombreEmpresa + " (ID: " + idEmpresa + ")"
+                : "Empresa ID: " + idEmpresa;
+
         JLabel lblEmpresa = new JLabel(" | " + txtEmpresa);
         lblEmpresa.setForeground(new Color(189, 195, 199));
         lblEmpresa.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        
+
         info.add(lblTitulo);
         info.add(lblEmpresa);
 
         JPanel acciones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         acciones.setOpaque(false);
-        
+
         JButton btnCerrarSesion = new JButton("Cerrar Sesi\u00F3n");
         btnCerrarSesion.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         btnCerrarSesion.setBackground(new Color(192, 57, 43));
@@ -165,15 +172,14 @@ public class FormPrincipal extends javax.swing.JFrame {
         btnCerrarSesion.setFocusPainted(false);
         btnCerrarSesion.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnCerrarSesion.addActionListener(e -> cerrarSesion());
-        
+
         acciones.add(btnCerrarSesion);
         panel.add(info, BorderLayout.WEST);
         panel.add(acciones, BorderLayout.EAST);
         return panel;
     }
 
-
-    private JTabbedPane crearPnaleContabilidad(){
+    private JTabbedPane crearPnaleContabilidad() {
 
         JTabbedPane tabsContabilidad = new JTabbedPane();
         tabsContabilidad.setFont(new Font("Segoe UI", Font.PLAIN, 12));
@@ -182,7 +188,7 @@ public class FormPrincipal extends javax.swing.JFrame {
         return tabsContabilidad;
     }
     // ==================== MÓDULO FISCAL (Sin cambios - ya está bien) ====================
-    
+
     private JTabbedPane crearPanelFiscal() {
         LibroVentasView ventasView = new LibroVentasView();
         LibroComprasView comprasView = new LibroComprasView();
@@ -203,7 +209,6 @@ public class FormPrincipal extends javax.swing.JFrame {
     }
 
     // ==================== MÓDULO COMPRAS (MODIFICADO: JTabbedPane + MVC) ====================
-    
     private JTabbedPane crearPanelComprasConTabs() {
         // 1. Crear las vistas del módulo Compras
         PanelProveedores proveedoresView = new PanelProveedores();
@@ -224,7 +229,7 @@ public class FormPrincipal extends javax.swing.JFrame {
         JTabbedPane tabsCompras = new JTabbedPane();
         tabsCompras.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         tabsCompras.setBackground(new Color(245, 245, 245));
-        
+
         // 5. Agregar vistas como pestañas con iconos Unicode
         tabsCompras.addTab("Proveedores", proveedoresView);
         tabsCompras.addTab("Registro de Compras", comprasView);
@@ -233,8 +238,38 @@ public class FormPrincipal extends javax.swing.JFrame {
         return tabsCompras;
     }
 
-    // ==================== MÓDULO BANCOS ====================
+    //Para el modulo Ventas
+    private JTabbedPane crearPanelVentas() {
 
+        JTabbedPane tabsVentas = new JTabbedPane();
+        tabsVentas.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+
+        JPCliente panelClientes = new JPCliente();
+        JPVentas panelVentas = new JPVentas();
+        JPCuentasPorCobrar panelCuentas = new JPCuentasPorCobrar();
+        JPLibroVentas panelLibro = new JPLibroVentas();
+
+        tabsVentas.addTab("Clientes", panelClientes);
+        tabsVentas.addTab("Ventas", panelVentas);
+        tabsVentas.addTab("Cuentas por Cobrar", panelCuentas);
+        tabsVentas.addTab("Libro de Ventas", panelLibro);
+
+        tabsVentas.addChangeListener(e -> {
+            int index = tabsVentas.getSelectedIndex();
+
+            if (index == 1) {
+                tabsVentas.setComponentAt(1, new JPVentas());
+            } else if (index == 2) {
+                tabsVentas.setComponentAt(2, new JPCuentasPorCobrar());
+            } else if (index == 3) {
+                tabsVentas.setComponentAt(3, new JPLibroVentas());
+            }
+        });
+
+        return tabsVentas;
+    }
+
+    // ==================== MÓDULO BANCOS ====================
     private JTabbedPane crearPanelBancos() {
         CuentasBancariasView cuentasView = new CuentasBancariasView();
         MovimientosView movimientosView = new MovimientosView();
@@ -255,16 +290,15 @@ public class FormPrincipal extends javax.swing.JFrame {
     }
 
     // ==================== COMPONENTES COMUNES ====================
-
     private JPanel crearStatusBar() {
         JPanel bar = new JPanel(new BorderLayout());
         bar.setBorder(BorderFactory.createEmptyBorder(4, 12, 4, 12));
         bar.setBackground(new Color(44, 62, 80));
-        
+
         String usuario = SessionManager.getNombreUsuario();
         String displayUser = (usuario != null && !usuario.trim().isEmpty()) ? usuario : "Invitado";
         String estado = SessionManager.haySesionActiva() ? "Conectado" : "Sesión no iniciada";
-            
+
         JLabel lblEstado = new JLabel(estado + " | Usuario: " + displayUser);
         lblEstado.setForeground(new Color(236, 240, 241));
         lblEstado.setFont(new Font("Segoe UI", Font.PLAIN, 11));
@@ -279,23 +313,28 @@ public class FormPrincipal extends javax.swing.JFrame {
         btn.setForeground(Color.BLACK);
         btn.setFocusPainted(false);
         btn.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(color.darker(), 2),
-            BorderFactory.createEmptyBorder(6, 12, 6, 12)
+                BorderFactory.createLineBorder(color.darker(), 2),
+                BorderFactory.createEmptyBorder(6, 12, 6, 12)
         ));
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btn.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent e) { btn.setBackground(color.brighter()); }
-            public void mouseExited(java.awt.event.MouseEvent e) { btn.setBackground(color); }
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                btn.setBackground(color.brighter());
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                btn.setBackground(color);
+            }
         });
         return btn;
     }
 
     private void cerrarSesion() {
         List<Integer> empresas = new ArrayList<>();
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement("SELECT DISTINCT id_empresa FROM entidades ORDER BY id_empresa");
-             ResultSet rs = pstmt.executeQuery()) {
-            while (rs.next()) empresas.add(rs.getInt(1));
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement pstmt = conn.prepareStatement("SELECT DISTINCT id_empresa FROM entidades ORDER BY id_empresa"); ResultSet rs = pstmt.executeQuery()) {
+            while (rs.next()) {
+                empresas.add(rs.getInt(1));
+            }
         } catch (Exception e) {
             empresas.add(1);
             empresas.add(2);
@@ -314,12 +353,16 @@ public class FormPrincipal extends javax.swing.JFrame {
         panel.add(comboEmpresas, BorderLayout.CENTER);
 
         int opcion = JOptionPane.showConfirmDialog(this, panel,
-            "Cerrar Sesi\u00F3n", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-        if (opcion != JOptionPane.OK_OPTION) return;
+                "Cerrar Sesi\u00F3n", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (opcion != JOptionPane.OK_OPTION) {
+            return;
+        }
 
         try {
             int idEmpresa = Integer.parseInt(comboEmpresas.getSelectedItem().toString().trim());
-            if (idEmpresa <= 0) throw new NumberFormatException();
+            if (idEmpresa <= 0) {
+                throw new NumberFormatException();
+            }
             SessionManager.iniciarSesion(idEmpresa, "Empresa " + idEmpresa, 1, "usuario");
 
             dispose();
@@ -343,7 +386,11 @@ public class FormPrincipal extends javax.swing.JFrame {
             new Thread(() -> {
                 for (int i = 0; i <= 100; i++) {
                     final int p = i;
-                    try { Thread.sleep(10); } catch (InterruptedException ex) { break; }
+                    try {
+                        Thread.sleep(10);
+                    } catch (InterruptedException ex) {
+                        break;
+                    }
                     SwingUtilities.invokeLater(() -> barra.setValue(p));
                 }
                 SwingUtilities.invokeLater(() -> {
@@ -360,8 +407,8 @@ public class FormPrincipal extends javax.swing.JFrame {
     }
 
     /**
-     * Método para llamar desde otro Main o clase externa
-     * Ejemplo: FormPrincipal.abrirDesdeLogin();
+     * Método para llamar desde otro Main o clase externa Ejemplo:
+     * FormPrincipal.abrirDesdeLogin();
      */
     public static void abrirDesdeLogin() {
         java.awt.EventQueue.invokeLater(() -> {
@@ -376,7 +423,7 @@ public class FormPrincipal extends javax.swing.JFrame {
             } catch (Exception ex) {
                 logger.log(java.util.logging.Level.WARNING, "Look and Feel error", ex);
             }
-            
+
             FormPrincipal form = new FormPrincipal();
             form.setVisible(true);
         });
@@ -388,7 +435,7 @@ public class FormPrincipal extends javax.swing.JFrame {
     public static void main(String args[]) {
         // Opcional: Simular sesión para pruebas directas
         // SessionManager.iniciarSesion(101, "Mi Empresa SA", 5, "admin");
-        
+
         abrirDesdeLogin();
     }
 
