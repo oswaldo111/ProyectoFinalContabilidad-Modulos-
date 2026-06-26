@@ -135,7 +135,7 @@ public class FormPrincipal extends javax.swing.JFrame {
         CatalogoCuentas catalogoView = new CatalogoCuentas();
         CatalogoController catalogoController = new CatalogoController(catalogoView);
         catalogoView.setController(catalogoController);
-        catalogoController.cargarCatalogo();
+        catalogoController.cargarEmpresas();
 
         JTabbedPane tabsContabilidad = new JTabbedPane();
         tabsContabilidad.setFont(new Font("Segoe UI", Font.PLAIN, 12));
