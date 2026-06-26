@@ -45,7 +45,16 @@ public class DBConnection {
     }
 
     public static void closeConnection(Connection conn) {
-        // No cerramos la conexión cacheada para reutilizarla
+        try {
+            if (conn != null && !conn.isClosed()) {
+                conn.close();
+                if (conn == cachedConnection) {
+                    cachedConnection = null;
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al cerrar conexión: " + e.getMessage());
+        }
     }
 
     // Métodos de compatibilidad

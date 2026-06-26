@@ -153,7 +153,6 @@ public class CompraDAO {
         Connection conn = null;
         try {
             conn = DBConnection.getConnection();
-            conn.setAutoCommit(false);
             
             String sqlFactura = "INSERT INTO facturacion " +
                 "(id_empresa, id_entidad, tipo_operacion, tipo_documento, numero_documento, " +
@@ -234,9 +233,7 @@ public class CompraDAO {
             }
             throw e;
         } finally {
-            if (conn != null) {
-                try { conn.setAutoCommit(true); } catch (SQLException e) { e.printStackTrace(); }
-            }
+            DBConnection.closeConnection(conn);
         }
     }
     

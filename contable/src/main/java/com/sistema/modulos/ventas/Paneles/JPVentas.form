@@ -54,7 +54,7 @@
                   <EmptySpace pref="21" max="32767" attributes="0"/>
                   <Component id="jLabel7" min="-2" pref="51" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="txtFechaEmicion" min="-2" pref="161" max="-2" attributes="0"/>
+                  <Component id="txtFechaEmision" min="-2" pref="161" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -71,7 +71,7 @@
                       <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtFechaEmicion" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtFechaEmision" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel14" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="txtFechaVencimiento" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="txtEmpresa" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -97,7 +97,7 @@
             <Property name="text" type="java.lang.String" value="Fecha"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtFechaEmicion">
+        <Component class="javax.swing.JTextField" name="txtFechaEmision">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
           </Properties>
@@ -352,8 +352,8 @@
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="3">
-                <StringItem index="0" value="&lt;Selecione&gt;"/>
-                <StringItem index="1" value="Factura Cosumidor Final"/>
+                <StringItem index="0" value="&lt;Seleccione&gt;"/>
+                <StringItem index="1" value="Factura Consumidor Final"/>
                 <StringItem index="2" value="Comprobante de Credito Fiscal"/>
               </StringArray>
             </Property>
@@ -519,7 +519,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel8">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Dinero Resivido"/>
+            <Property name="text" type="java.lang.String" value="Dinero Recibido"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtEfectivo">

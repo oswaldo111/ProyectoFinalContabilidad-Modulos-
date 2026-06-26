@@ -254,18 +254,6 @@ public class FormPrincipal extends javax.swing.JFrame {
         tabsVentas.addTab("Cuentas por Cobrar", panelCuentas);
         tabsVentas.addTab("Libro de Ventas", panelLibro);
 
-        tabsVentas.addChangeListener(e -> {
-            int index = tabsVentas.getSelectedIndex();
-
-            if (index == 1) {
-                tabsVentas.setComponentAt(1, new JPVentas());
-            } else if (index == 2) {
-                tabsVentas.setComponentAt(2, new JPCuentasPorCobrar());
-            } else if (index == 3) {
-                tabsVentas.setComponentAt(3, new JPLibroVentas());
-            }
-        });
-
         return tabsVentas;
     }
 

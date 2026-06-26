@@ -18,14 +18,12 @@ public class VentaDAO {
 
     public int obtenerIdEmpresaActual() {
         try {
-            SessionManager session = SessionManager.getInstancia();
-
-            if (session != null && session.haySesionActiva()) {
-                return Math.toIntExact(session.getIdEmpresa());
+            if (SessionManager.haySesionActiva()) {
+                return SessionManager.getIdEmpresa();
             }
 
         } catch (Exception e) {
-            System.out.println("No hay sesión activa. Usando empresa de prueba ID 1.");
+            System.out.println("No hay sesion activa. Usando empresa de prueba ID 1.");
         }
 
         return ID_EMPRESA_PRUEBA;

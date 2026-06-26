@@ -11,10 +11,15 @@ public class SessionManager {
     private static int idUsuario = 1;
     private static String nombreUsuario = "";
 
+    private static SessionManager instancia;
+
     private SessionManager() {}
 
     public static synchronized SessionManager getInstancia() {
-        return new SessionManager();
+        if (instancia == null) {
+            instancia = new SessionManager();
+        }
+        return instancia;
     }
 
     public static void iniciarSesion(int idEmpresa, String nombreEmpresa, int idUsuario, String nombreUsuario) {

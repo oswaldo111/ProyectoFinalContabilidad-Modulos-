@@ -401,7 +401,7 @@ public class JPVentas extends javax.swing.JPanel {
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         // 3. Convertimos la fecha a texto con ese formato y la ponemos en el txt
-        txtFechaEmicion.setText(fechaActual.format(formato));
+        txtFechaEmision.setText(fechaActual.format(formato));
     }
 
     // 1. Método para las categorías (Mantiene tu misma lógica con escudos de seguridad)
@@ -519,7 +519,7 @@ public class JPVentas extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        txtFechaEmicion = new javax.swing.JTextField();
+        txtFechaEmision = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
         txtFechaVencimiento = new javax.swing.JTextField();
         txtEmpresa = new javax.swing.JTextField();
@@ -566,7 +566,7 @@ public class JPVentas extends javax.swing.JPanel {
 
         jLabel7.setText("Fecha");
 
-        txtFechaEmicion.setEditable(false);
+        txtFechaEmision.setEditable(false);
 
         jLabel14.setText("Fecha Vencimiento");
 
@@ -591,7 +591,7 @@ public class JPVentas extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtFechaEmicion, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtFechaEmision, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel14)
                 .addGap(18, 18, 18)
@@ -606,7 +606,7 @@ public class JPVentas extends javax.swing.JPanel {
                     .addComponent(jLabel1)
                     .addComponent(jLabel2)
                     .addComponent(jLabel7)
-                    .addComponent(txtFechaEmicion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtFechaEmision, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel14)
                     .addComponent(txtFechaVencimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -619,7 +619,7 @@ public class JPVentas extends javax.swing.JPanel {
 
         jLabel5.setText("Tipo Documento");
 
-        cmbTipoDocumento.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "<Selecione>", "Factura Cosumidor Final", "Comprobante de Credito Fiscal" }));
+        cmbTipoDocumento.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "<Seleccione>", "Factura Consumidor Final", "Comprobante de Credito Fiscal" }));
         cmbTipoDocumento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmbTipoDocumentoActionPerformed(evt);
@@ -715,7 +715,7 @@ public class JPVentas extends javax.swing.JPanel {
             }
         });
 
-        jLabel8.setText("Dinero Resivido");
+        jLabel8.setText("Dinero Recibido");
 
         txtEfectivo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -978,7 +978,7 @@ public class JPVentas extends javax.swing.JPanel {
         // 3. Validar tipo documento
         if (cmbTipoDocumento.getSelectedItem() == null
                 || cmbTipoDocumento.getSelectedItem().toString().trim().equals("<Seleccione>")
-                || cmbTipoDocumento.getSelectedItem().toString().trim().equals("<Selecione>")) {
+                || cmbTipoDocumento.getSelectedItem().toString().trim().equals("<Seleccione>")) {
 
             javax.swing.JOptionPane.showMessageDialog(
                     this,
@@ -1051,7 +1051,7 @@ public class JPVentas extends javax.swing.JPanel {
         LocalDate fechaVencimiento = null;
 
         try {
-            fechaEmision = LocalDate.parse(txtFechaEmicion.getText().trim(), formato);
+            fechaEmision = LocalDate.parse(txtFechaEmision.getText().trim(), formato);
         } catch (DateTimeParseException e) {
             javax.swing.JOptionPane.showMessageDialog(
                     this,
@@ -1226,7 +1226,7 @@ public class JPVentas extends javax.swing.JPanel {
 
         if (cmbTipoDocumento.getSelectedItem() == null
                 || cmbTipoDocumento.getSelectedItem().toString().trim().equals("<Seleccione>")
-                || cmbTipoDocumento.getSelectedItem().toString().trim().equals("<Selecione>")) {
+                || cmbTipoDocumento.getSelectedItem().toString().trim().equals("<Seleccione>")) {
 
             javax.swing.JOptionPane.showMessageDialog(
                     this,
@@ -1244,7 +1244,7 @@ public class JPVentas extends javax.swing.JPanel {
 
         // CANDADO NUEVO: Validar si seleccionó un tipo de documento válido
         if (cmbTipoDocumento.getSelectedItem() == null
-                || cmbTipoDocumento.getSelectedItem().toString().equals("<Selecione>")) {
+                || cmbTipoDocumento.getSelectedItem().toString().equals("<Seleccione>")) {
 
             javax.swing.JOptionPane.showMessageDialog(this,
                     "Debe seleccionar un Tipo de Documento válido antes de agregar productos.",
@@ -1359,7 +1359,7 @@ public class JPVentas extends javax.swing.JPanel {
             String tipoSeleccionado = cmbTipoDocumento.getSelectedItem().toString().trim();
 
             if (!tipoSeleccionado.equals("<Seleccione>")
-                    && !tipoSeleccionado.equals("<Selecione>")) {
+                    && !tipoSeleccionado.equals("<Seleccione>")) {
 
                 String numero = ventaDAO.generarNumeroDocumento(tipoSeleccionado);
                 txtNumeroDocumento.setText(numero);
@@ -1457,7 +1457,7 @@ public class JPVentas extends javax.swing.JPanel {
     private javax.swing.JTextField txtEmpresa;
     private javax.swing.JTextField txtEstadoVenta;
     private javax.swing.JTextField txtExistencias;
-    private javax.swing.JTextField txtFechaEmicion;
+    private javax.swing.JTextField txtFechaEmision;
     private javax.swing.JTextField txtFechaVencimiento;
     private javax.swing.JTextField txtIdFactura;
     private javax.swing.JTextField txtMontoExtenso;
